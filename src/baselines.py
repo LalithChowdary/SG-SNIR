@@ -73,12 +73,15 @@ def max_expected_h_blocking(
         best_H    = float("inf")
 
         for (u, v) in gamma_W:
+            # Save original edge attributes before removal so they are
+            # restored exactly — crucial for heterogeneous edge weights.
+            original_attrs = G[u][v].copy()
             G.remove_edge(u, v)
-            H_e, _ = compute_influence_range(
+            H_e, _ = compute_influence_range(  # _ = per-timestep state history, not needed here
                 G, initial_S, initial_N, initial_I, initial_R,
                 params, T, default_weight
             )
-            G.add_edge(u, v, weight=default_weight)
+            G.add_edge(u, v, **original_attrs)
             if H_e < best_H:
                 best_H    = H_e
                 best_edge = (u, v)

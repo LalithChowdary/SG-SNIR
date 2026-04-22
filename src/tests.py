@@ -45,7 +45,7 @@ def test_spectral_drop_algebra():
     G = nx.DiGraph()
     G.add_edges_from([(0, 1), (1, 2), (2, 0), (2, 3)])
 
-    S_star, rho, intra_degrees, vol = get_kscc(G)
+    S_star, rho, intra_degrees, vol, deg_product_sum = get_kscc(G)
 
     assert S_star is not None, "Should find a non-trivial KSCC"
     assert S_star == frozenset({0, 1, 2}), f"KSCC should be {{0,1,2}}, got {S_star}"
@@ -53,8 +53,7 @@ def test_spectral_drop_algebra():
     # Manual rho = deg_product_sum / vol = 3/3 = 1.0
     assert abs(rho - 1.0) < 1e-9, f"Expected rho=1.0, got {rho}"
 
-    # Compute SpectralDrop for edge 1→2
-    deg_product_sum = sum(intra_degrees[u][0] * intra_degrees[u][1] for u in S_star)
+    # Use deg_product_sum returned directly by get_kscc (no redundant recomputation)
     d_in_u  = intra_degrees[1][0]   # d_in_intra(1) = 1
     d_out_v = intra_degrees[2][1]   # d_out_intra(2) = 1
 
@@ -90,7 +89,7 @@ def test_fallback_gamma_prime_disconnected():
     gamma_W = get_candidates(G, W, initial_S)
     assert gamma_W == [(0, 1)], "Γ(W) should contain edge (0,1)"
 
-    S_star, _, _, _ = get_kscc(G)
+    S_star, _, _, _, _ = get_kscc(G)
     assert S_star == frozenset({3, 4, 5}), f"KSCC should be {{3,4,5}}, got {S_star}"
 
     # gamma_prime: only edges where v ∈ S*
@@ -126,14 +125,14 @@ def test_fallback_C_below_threshold():
     initial_S = {1, 2}
 
     gamma_W = get_candidates(G, W, initial_S)
-    S_star, rho_S_star, intra_degrees, vol_S_star = get_kscc(G)
+    S_star, rho_S_star, intra_degrees, vol_S_star, deg_product_sum = get_kscc(G)
 
     assert S_star is not None
 
     gamma_prime = [(u, v) for (u, v) in gamma_W if u in S_star and v in S_star]
     assert len(gamma_prime) > 0, "Should have internal KSCC candidate edges"
 
-    deg_product_sum = sum(intra_degrees[u][0] * intra_degrees[u][1] for u in S_star)
+    # Use deg_product_sum returned directly from get_kscc
 
     # Use a very high ε to guarantee all edges fall below threshold
     eps_high = 0.99
