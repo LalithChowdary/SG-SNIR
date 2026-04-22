@@ -38,6 +38,10 @@ class SNIRParams:
         eta: float   = 0.140,   # N → R (asymptomatic recovery)
         gamma: float = 0.315,   # I → R (symptomatic recovery)
         xi: float    = 0.300,   # R → S (waning immunity)
+        kappa: float = 1.0,     # N-state transmission fraction:
+                                # a(v,t) = pI(v,t) + κ · pN(v,t)
+                                # κ=0: N nodes are fully latent (no transmission)
+                                # κ=1: N and I nodes transmit equally (default)
     ):
         self.alpha = alpha
         self.beta  = beta
@@ -45,6 +49,7 @@ class SNIRParams:
         self.eta   = eta
         self.gamma = gamma
         self.xi    = xi
+        self.kappa = kappa
 
 
 def compute_influence_range(
@@ -81,6 +86,7 @@ def compute_influence_range(
     α, β = params.alpha, params.beta
     δ, η = params.delta, params.eta
     γ, ξ = params.gamma, params.xi
+    κ    = params.kappa  # N-state transmission fraction
 
     # --- Initialise state probability vectors ---
     pS: Dict = {}
@@ -98,7 +104,7 @@ def compute_influence_range(
             pS[u], pN[u], pI[u], pR[u] = 0.0, 0.0, 0.0, 1.0
         else:
             pS[u], pN[u], pI[u], pR[u] = 1.0, 0.0, 0.0, 0.0
-        a[u] = pI[u] + pN[u]
+        a[u] = pI[u] + κ * pN[u]  # a(u,t) = pI + κ·pN
 
     H = sum(pI[u] + pN[u] for u in nodes)
     history = {0: {u: {"S": pS[u], "N": pN[u], "I": pI[u], "R": pR[u]} for u in nodes}}
@@ -146,7 +152,7 @@ def compute_influence_range(
             new_pR[u] = new_pR_u
             new_pN[u] = new_pN_u
             new_pS[u] = new_pS_u
-            new_a[u]  = new_pI_u + new_pN_u
+            new_a[u]  = new_pI_u + κ * new_pN_u  # a(u,t) = pI + κ·pN
 
         pS, pN, pI, pR, a = new_pS, new_pN, new_pI, new_pR, new_a
         H += sum(pI[u] + pN[u] for u in nodes)

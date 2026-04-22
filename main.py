@@ -27,6 +27,9 @@ Configurable parameters:
   --eta        : SNIR η — N→R probability (default: 0.140)
   --gamma      : SNIR γ — I→R probability (default: 0.315)
   --xi         : SNIR ξ — R→S probability (default: 0.300)
+  --kappa      : N-state transmission fraction κ (default: 1.0)
+                 a(v,t) = pI(v,t) + κ·pN(v,t)
+                 κ=0 → N nodes are fully latent; κ=1 → equal to I nodes
   --frac-I     : Fraction of nodes initially in I state (default: 0.02)
   --frac-N     : Fraction of nodes initially in N state (default: 0.02)
   --weight     : Default edge transmission probability (default: 0.05)
@@ -87,6 +90,8 @@ def parse_args():
     p.add_argument("--eta",      type=float, default=0.140, help="N→R probability η")
     p.add_argument("--gamma",    type=float, default=0.315, help="I→R probability γ")
     p.add_argument("--xi",       type=float, default=0.300, help="R→S probability ξ")
+    p.add_argument("--kappa",    type=float, default=1.0,
+                   help="N-state transmission fraction κ: a(v,t)=pI+κ·pN (0=latent, 1=equal to I)")
 
     # Initial state seeding
     p.add_argument("--frac-I",   type=float, default=0.02,  help="Fraction of nodes in I state at t=0")
@@ -323,7 +328,8 @@ def main():
 
     params = SNIRParams(
         alpha=args.alpha, beta=args.beta, delta=args.delta,
-        eta=args.eta, gamma=args.gamma, xi=args.xi
+        eta=args.eta, gamma=args.gamma, xi=args.xi,
+        kappa=args.kappa,
     )
 
     networks_to_run: List[Tuple[str, nx.DiGraph]] = []
