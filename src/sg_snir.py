@@ -330,16 +330,21 @@ def sg_snir_blocking(
 
         # Fallback: if W is entirely disconnected from KSCC (or S_star is None),
         # degrade gracefully to MaxExpectedH behaviour over the full Γ(W).
+        # IMPORTANT: bypass spectral_filter in this case —
+        #   (a) spectral filtering is meaningless with no KSCC connection, and
+        #   (b) gamma_W contains edges where v ∉ S*, which would fire the
+        #       defensive assertion inside spectral_filter in debug mode.
         if len(gamma_prime) == 0 and len(gamma_W) > 0:
             if verbose:
                 print(f"[iter {iteration}] Γ'(W) empty — no KSCC reachable from W. Degrading to Γ(W).")
-            gamma_prime = gamma_W
+            C = gamma_W  # skip spectral_filter entirely
 
-        # Step 4 — Adaptive spectral filtering
-        C = spectral_filter(
-            gamma_prime, S_star, rho_S_star,
-            intra_degrees, vol_S_star, deg_product_sum, eps
-        )
+        else:
+            # Step 4 — Adaptive spectral filtering (normal path)
+            C = spectral_filter(
+                gamma_prime, S_star, rho_S_star,
+                intra_degrees, vol_S_star, deg_product_sum, eps
+            )
 
         if verbose:
             print(f"[iter {iteration}] |Γ(W)|={len(gamma_W)}, |Γ'(W)|={len(gamma_prime)}, |C|={len(C)}, ρ(S*)={rho_S_star:.4f}")
