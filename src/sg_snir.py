@@ -82,7 +82,12 @@ def get_kscc(
 
     for scc in sccs:
         if len(scc) < 2:
-            continue  # trivial SCC, ρ = 0
+            # Paper Step 3: "Trivial SCCs (single nodes with no self-loop) are discarded."
+            # A single node WITH a self-loop is non-trivial and must not be skipped.
+            node = next(iter(scc))
+            if not G.has_edge(node, node):
+                continue  # truly trivial — no self-loop, spectral radius = 0
+            # else: single node with self-loop — fall through to compute ρ
 
         sub = G.subgraph(scc)
         # Intra-SCC in/out degrees (only edges within the SCC count)
@@ -156,6 +161,15 @@ def spectral_filter(
     if S_star is None or vol_S_star <= 1:
         return list(gamma_prime)
 
+    # Defensive assertion: all edges in gamma_prime must have v ∈ S*.
+    # This is guaranteed by the Γ'(W) construction above, but assert
+    # defensively to catch any future construction errors immediately.
+    # Use `if __debug__:` so this is stripped in production (`python -O`).
+    if __debug__ and S_star is not None:
+        assert all(v in S_star for (_, v) in gamma_prime), (
+            "gamma_prime contains edge with v ∉ S* — Γ'(W) construction error"
+        )
+
     C = []
     threshold = eps * rho_S_star
 
@@ -172,16 +186,21 @@ def spectral_filter(
             #     Δ_u = d_in(u)·d_out(u) − d_in(u)·(d_out(u)−1) = d_in(u)
             #   v loses one incoming edge: d_in(v) → d_in(v)-1
             #     Δ_v = d_in(v)·d_out(v) − (d_in(v)−1)·d_out(v) = d_out(v)
+            # Paper Eq. 17: subtract d_in(u) + d_out(v) directly.
             #
-            d_in_u  = intra_degrees[u][0]
-            d_out_u = intra_degrees[u][1]
-            d_in_v  = intra_degrees[v][0]
-            d_out_v = intra_degrees[v][1]
 
-            delta_u = d_in_u * d_out_u - d_in_u * (d_out_u - 1)  # = d_in_u
-            delta_v = d_in_v * d_out_v - (d_in_v - 1) * d_out_v  # = d_out_v
+            # Defensive guard MUST come before any intra_degrees[v] access.
+            # v ∈ S* is guaranteed by gamma_prime construction, but if
+            # get_kscc ever has a bug this prevents a KeyError crash.
+            if v not in intra_degrees:
+                C.append((u, v))  # conservative: treat as bridge
+                continue
 
-            new_numerator = deg_product_sum - delta_u - delta_v
+            d_in_u  = intra_degrees[u][0]   # d_in^{S*}(u)
+            d_out_v = intra_degrees[v][1]   # d_out^{S*}(v)
+
+            # Δ_sum = d_in(u) + d_out(v) — direct paper formula (Eq. 17)
+            new_numerator = deg_product_sum - d_in_u - d_out_v
             new_rho = new_numerator / (vol_S_star - 1)
             spectral_drop = rho_S_star - new_rho
             if spectral_drop > threshold:
@@ -302,6 +321,9 @@ def sg_snir_blocking(
             gamma_prime = [
                 (u, v) for (u, v) in gamma_W
                 if v in S_star
+                # Covers both: internal edges (u ∈ S*, v ∈ S*)
+                # and bridge edges (u ∉ S*, v ∈ S*)
+                # Edges where v ∉ S* are excluded — they have no spectral impact on S*
             ]
         else:
             gamma_prime = []
@@ -333,7 +355,10 @@ def sg_snir_blocking(
             # probabilities that differ from default_weight.
             original_attrs = G[u][v].copy()
             G.remove_edge(u, v)
-            H_e, _ = compute_influence_range(  # _ = per-timestep state history, not needed here
+            # Pass initial state sets — static allocation means we always evaluate
+            # from the t=0 configuration, consistent with W being fixed at t=0
+            # (paper Step 6: "The infected set W is held fixed throughout all k iterations").
+            H_e, _ = compute_influence_range(  # _ = per-timestep history, not needed here
                 G, initial_S, initial_N, initial_I, initial_R,
                 params, T, default_weight
             )

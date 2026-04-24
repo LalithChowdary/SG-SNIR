@@ -148,6 +148,61 @@ def test_fallback_C_below_threshold():
 
 
 # ---------------------------------------------------------------------------
+# Test 4: Defensive assertion fires on bad gamma_prime
+# ---------------------------------------------------------------------------
+
+def test_assertion_fires_on_bad_gamma_prime():
+    """
+    Verify that the defensive assertion in spectral_filter raises AssertionError
+    when gamma_prime contains an edge whose v is NOT in S_star.
+
+    This validates Fix 1 (Issue 1): the assert guards against construction errors.
+    """
+    import traceback
+
+    G = nx.DiGraph()
+    G.add_edges_from([(0, 1), (1, 2), (2, 0)])  # KSCC = {0,1,2}
+    G.add_edge(0, 3)                              # node 3 is outside KSCC
+
+    S_star, rho_S_star, intra_degrees, vol_S_star, deg_product_sum = get_kscc(G)
+    assert S_star == frozenset({0, 1, 2})
+
+    # Deliberately inject a bad edge: (0→3) where 3 ∉ S_star
+    bad_gamma_prime = [(0, 3)]
+
+    try:
+        spectral_filter(bad_gamma_prime, S_star, rho_S_star,
+                        intra_degrees, vol_S_star, deg_product_sum, eps=0.01)
+        assert False, "AssertionError should have been raised for bad gamma_prime"
+    except AssertionError as e:
+        assert "construction error" in str(e), f"Unexpected assertion message: {e}"
+    print("✓ Test 4 passed: Defensive assertion fires on bad gamma_prime.")
+
+
+# ---------------------------------------------------------------------------
+# Test 5: get_kscc correctly handles single-node with self-loop (non-trivial)
+# ---------------------------------------------------------------------------
+
+def test_kscc_self_loop_single_node():
+    """
+    A single node with a self-loop is non-trivial per paper Step 3.
+    get_kscc should NOT skip it and must compute a valid ρ for it.
+
+    Graph: node 0 with self-loop only.
+    Intra-SCC: d_in(0)=1, d_out(0)=1, vol=1, deg_product_sum=1, ρ=1.0
+    """
+    G = nx.DiGraph()
+    G.add_edge(0, 0)  # self-loop only
+
+    S_star, rho, intra_degrees, vol, deg_product_sum = get_kscc(G)
+
+    assert S_star is not None, "Self-loop node should form a non-trivial SCC"
+    assert S_star == frozenset({0}), f"Expected S_star={{0}}, got {S_star}"
+    assert abs(rho - 1.0) < 1e-9, f"Expected ρ=1.0 for self-loop, got {rho}"
+    print("✓ Test 5 passed: Self-loop single-node SCC is correctly handled as non-trivial.")
+
+
+# ---------------------------------------------------------------------------
 # Run all tests
 # ---------------------------------------------------------------------------
 
@@ -155,4 +210,6 @@ if __name__ == "__main__":
     test_spectral_drop_algebra()
     test_fallback_gamma_prime_disconnected()
     test_fallback_C_below_threshold()
+    test_assertion_fires_on_bad_gamma_prime()
+    test_kscc_self_loop_single_node()
     print("\n✓ All unit tests passed.")
