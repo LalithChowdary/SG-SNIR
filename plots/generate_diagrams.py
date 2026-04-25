@@ -18,27 +18,32 @@ colors = ['#e74c3c', '#2ecc71', '#95a5a6']
 plt.figure(figsize=(7, 5))
 plt.scatter(times, h_final, c=colors, s=200, edgecolor='black', zorder=3)
 
-# Add labels to points
-for i, method in enumerate(methods):
-    if method == 'SG-SNIR\n(Ours)':
-        plt.annotate(method, (times[i], h_final[i]), xytext=(10, -20), 
-                     textcoords='offset points', fontweight='bold')
-    else:
-        plt.annotate(method, (times[i], h_final[i]), xytext=(10, 5), 
-                     textcoords='offset points')
+# Add labels to points with better placement
+plt.annotate(methods[0], (times[0], h_final[0]), xytext=(-10, -35), 
+             textcoords='offset points', ha='center', fontsize=10)
+plt.annotate(methods[1], (times[1], h_final[1]), xytext=(0, -35), 
+             textcoords='offset points', ha='center', fontweight='bold', fontsize=11)
+plt.annotate(methods[2], (times[2], h_final[2]), xytext=(15, -5), 
+             textcoords='offset points', fontsize=10)
 
 # Formatting
 plt.xscale('log')
+plt.xlim(1, 200) # Give more horizontal space
+plt.ylim(20.65, 21.55) # Give more vertical space
+
 plt.grid(True, linestyle='--', alpha=0.6, zorder=0)
 plt.title('Quality vs. Efficiency Trade-off (p2p-Gnutella, k=20)', fontsize=12, pad=15)
-plt.xlabel('Wall-clock Runtime (seconds) [Log Scale] $\\rightarrow$ Faster', fontsize=11)
-plt.ylabel('Final Epidemic Influence ($H_{final}$) $\\rightarrow$ Better', fontsize=11)
-# Invert x-axis so faster (smaller time) is to the right? No, standard is left-to-right.
-# Actually, lower H is better (bottom), lower time is better (left).
-# So bottom-left is the optimal corner.
-plt.annotate('Optimal Region\n(Fast & High Quality)', xy=(5, 20.75), xytext=(2, 20.9),
-             arrowprops=dict(facecolor='black', shrink=0.05, width=1.5, headwidth=6),
-             fontsize=10, ha='center', color='#27ae60')
+plt.xlabel('$\\leftarrow$ Faster          Wall-clock Runtime (seconds) [Log Scale]          Slower $\\rightarrow$', fontsize=11)
+plt.ylabel('$\\leftarrow$ Better          Final Epidemic Influence ($H_{final}$)          Worse $\\rightarrow$', fontsize=11)
+
+# Annotate the trade-off
+plt.annotate('Optimal\nTrade-off', xy=(times[1], h_final[1] - 0.02), xytext=(10, 20.9),
+             arrowprops=dict(facecolor='#27ae60', shrink=0.05, width=1.5, headwidth=6),
+             fontsize=10, ha='center', color='#27ae60', fontweight='bold')
+
+# Draw Pareto frontier line between SG-SNIR and MaxExpH
+plt.plot([times[1], times[0]], [h_final[1], h_final[0]], 'k--', alpha=0.5, zorder=2)
+plt.plot([times[2], times[1]], [h_final[2], h_final[1]], 'k--', alpha=0.5, zorder=2)
 
 plt.tight_layout()
 plt.savefig(os.path.join(out_dir, 'tradeoff_scatter.pdf'), format='pdf', dpi=300)
