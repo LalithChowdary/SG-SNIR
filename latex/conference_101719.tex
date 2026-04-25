@@ -385,6 +385,13 @@ soc-Epinions1 & 42.5\% & 601 & 790 & 1.31$\times$ \\
 
 SG-SNIR achieves 2.3--2.4$\times$ fewer evaluations on networks with KSCC concentration $\geq 18\%$. HIV shows no speedup because its filter ratio is 1.0 (boundary case). The lower speedup on soc-Epinions1 (1.31$\times$) despite its larger KSCC (42.5\%) is explained by its high graph density: 508{,}837 edges produce a large absolute $\Gamma(W)$, and a higher fraction of candidates pass the filter in absolute terms even though the filter ratio (0.643) is below 1.0.
 
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.9\linewidth]{../plots/diagrams/tradeoff_scatter.pdf}
+\caption{Efficiency vs. Quality trade-off on p2p-Gnutella ($k=20$). SG-SNIR forms the optimal Pareto frontier (fast runtime, high quality) compared to MaxExpectedH and the structural heuristic DegreeProduct.}
+\label{fig:tradeoff}
+\end{figure}
+
 \subsection{Experiment 3: Ablation Study}
 
 Table~\ref{tab:ablation} reports the contribution of each SG-SNIR component. The boundary case (HIV) is excluded as all variants are identical there.
@@ -494,6 +501,13 @@ To validate the necessity of SG-SNIR's hybrid approach, we benchmark it against 
 \textbf{Comparison against DINO [2]:} DINO [2] is a node immunization strategy that greedily removes nodes to minimize the spectral radius of the KSCC. However, removing whole nodes is often practically impossible in real-world quarantines. To create a fair comparison against SG-SNIR's targeted edge-blocking approach, we use an \emph{equivalent contact budget}. We ran the original DINO algorithm on p2p-Gnutella to select $k=5$ nodes to remove. Removing these 5 nodes resulted in the deletion of exactly 459 edges (contacts). Evaluating this DINO intervention using the SNIR simulator yielded a final expected influence of $H_{\text{final}} = 19.80$.
 
 We then provided SG-SNIR with the exact same intervention budget of 459 edges. SG-SNIR achieved a significantly lower final influence of $H_{\text{final}} = 15.63$, representing a \textbf{21.1\% reduction in epidemic spread} (a quality gap improvement of 4.17) for the exact same number of blocked contacts. This conclusively validates our core argument: using structural metrics alone (like DINO) wastes intervention budget on non-transmitting contacts. By combining DINO's spectral guidance with SNIR simulation awareness, SG-SNIR isolates the specific contacts responsible for the epidemic, achieving vastly superior containment for the same intervention cost.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{../plots/diagrams/budget_comparison_bar.pdf}
+\caption{Equivalent Contact Budget comparison on p2p-Gnutella. SG-SNIR reduces epidemic influence by 21.1\% compared to DINO when given the exact same budget of 459 removed contacts.}
+\label{fig:budget_bar}
+\end{figure}
 
 \section{Conclusions}
 \label{sec:conclusions}
