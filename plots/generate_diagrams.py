@@ -27,13 +27,13 @@ plt.annotate(methods[2], (times[2], h_final[2]), xytext=(15, -5),
              textcoords='offset points', fontsize=10)
 
 # Formatting
-plt.xscale('log')
-plt.xlim(1, 200) # Give more horizontal space
+# Remove log scale, use linear from 0 to 100
+plt.xlim(0, 100) # Give more horizontal space
 plt.ylim(20.65, 21.55) # Give more vertical space
 
 plt.grid(True, linestyle='--', alpha=0.6, zorder=0)
 plt.title('Quality vs. Efficiency Trade-off (p2p-Gnutella, k=20)', fontsize=12, pad=15)
-plt.xlabel('$\\leftarrow$ Faster          Wall-clock Runtime (seconds) [Log Scale]          Slower $\\rightarrow$', fontsize=11)
+plt.xlabel('$\\leftarrow$ Faster          Wall-clock Runtime (seconds)          Slower $\\rightarrow$', fontsize=11)
 plt.ylabel('$\\leftarrow$ Better          Final Epidemic Influence ($H_{final}$)          Worse $\\rightarrow$', fontsize=11)
 
 # Annotate the trade-off
