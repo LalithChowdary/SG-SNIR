@@ -42,67 +42,72 @@ def run_dino_edge_equivalent():
     nodes_list_sorted = sorted(nodes_list)
     A = nx.to_numpy_array(G, nodelist=nodes_list_sorted)
     
-    k_nodes = 5
-    print(f"Running DINO to select {k_nodes} nodes...")
+    k_nodes_max = 5
+    print(f"Running DINO to select {k_nodes_max} nodes...")
     start_dino = time.time()
     dino = Dino(None)
     # Get immunized nodes (returns integer indices of A)
-    dino_indices = dino.get_immunized_nodes(A, k_nodes)
+    dino_indices = dino.get_immunized_nodes(A, k_nodes_max)
     dino_nodes = [nodes_list_sorted[i] for i in dino_indices]
     dino_time = time.time() - start_dino
     
     print(f"DINO selected nodes: {dino_nodes} in {dino_time:.1f}s")
     
-    # Count how many edges this removes
-    dino_edges_to_remove = set()
+    # Pre-calculate the cumulative edges removed by DINO at each k step
+    dino_cumulative_edges = []
+    edges_so_far = set()
     for u in dino_nodes:
         # All outgoing edges
         for v in G.successors(u):
-            dino_edges_to_remove.add((u, v))
+            edges_so_far.add((u, v))
         # All incoming edges
         for pre in G.predecessors(u):
-            dino_edges_to_remove.add((pre, u))
-            
-    num_edges_budget = len(dino_edges_to_remove)
-    print(f"These {k_nodes} nodes correspond to {num_edges_budget} total edges.")
+            edges_so_far.add((pre, u))
+        dino_cumulative_edges.append(len(edges_so_far))
+        
+    max_budget = dino_cumulative_edges[-1]
     
-    # Evaluate DINO's graph
-    G_dino = G.copy()
-    G_dino.remove_edges_from(dino_edges_to_remove)
-    print("Evaluating DINO intervention via SNIR simulation...")
-    H_dino, _ = compute_influence_range(G_dino, initial_S, initial_N, initial_I, initial_R, params, T)
-    print(f"DINO H_final: {H_dino:.4f}")
-    
-    # Run SG-SNIR for exactly num_edges_budget
-    print(f"\nRunning SG-SNIR for {num_edges_budget} edges...")
+    # Run SG-SNIR once up to max_budget
+    print(f"\nRunning SG-SNIR for up to {max_budget} edges...")
     start_sg = time.time()
-    _, sg_H_history, sg_evals = sg_snir_blocking(G, initial_S, initial_N, initial_I, initial_R, params, num_edges_budget, T)
+    _, sg_H_history, sg_evals = sg_snir_blocking(G, initial_S, initial_N, initial_I, initial_R, params, max_budget, T)
     sg_time = time.time() - start_sg
-    H_sg = sg_H_history[-1]
     
-    print(f"SG-SNIR H_final: {H_sg:.4f} in {sg_time:.1f}s")
-    print(f"Quality Gap (SG-SNIR improvement): {H_dino - H_sg:.4f}")
+    # Evaluate DINO at each k step
+    results = []
+    edges_so_far_eval = set()
     
+    for i, u in enumerate(dino_nodes):
+        k = i + 1
+        for v in G.successors(u):
+            edges_so_far_eval.add((u, v))
+        for pre in G.predecessors(u):
+            edges_so_far_eval.add((pre, u))
+            
+        budget = len(edges_so_far_eval)
+        
+        # Evaluate DINO's graph
+        G_dino = G.copy()
+        G_dino.remove_edges_from(edges_so_far_eval)
+        H_dino, _ = compute_influence_range(G_dino, initial_S, initial_N, initial_I, initial_R, params, T)
+        
+        # Get SG-SNIR at exact budget (or its last value if budget exceeds total possible transmitting edges)
+        sg_idx = min(budget, len(sg_H_history) - 1)
+        H_sg = sg_H_history[sg_idx]
+        
+        print(f"k={k} nodes | Budget={budget} edges | DINO H={H_dino:.4f} | SG-SNIR H={H_sg:.4f}")
+        
+        results.append({
+            'k_nodes': k,
+            'budget_edges': budget,
+            'dino_H': float(H_dino),
+            'sg_H': float(H_sg)
+        })
+
     # Save results
-    results = {
-        'dataset': dataset_name,
-        'k_nodes': k_nodes,
-        'dino': {
-            'selected_nodes': [int(n) if isinstance(n, np.integer) else n for n in dino_nodes],
-            'edges_removed': num_edges_budget,
-            'H_final': float(H_dino),
-            'time_s': dino_time
-        },
-        'sg_snir': {
-            'edges_removed': num_edges_budget,
-            'H_final': float(H_sg),
-            'time_s': sg_time,
-            'evals': sg_evals
-        }
-    }
     os.makedirs('results/experiment9', exist_ok=True)
     with open(f'results/experiment9/{dataset_name}_baseline_comparison.json', 'w') as f:
-        json.dump(results, f, indent=4)
+        json.dump({'dataset': dataset_name, 'data': results}, f, indent=4)
         
     print(f"\nSaved to results/experiment9/{dataset_name}_baseline_comparison.json")
 
