@@ -1,0 +1,39 @@
+
+======================================================================
+  EXPERIMENT 5 — Scalability Analysis
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+  [Seed] S=35223, N=0, I=5, R=0
+  Running SG-SNIR...
+  SG-SNIR: 288.9s
+  Running MaxExpectedH (full)...
+  SG-SNIR=288.877s  MaxExpH=299.992s  Speedup=1.04
+
+────────────────────────────────────────────────────────────
+  Dataset: p2p-Gnutella
+[p2p-Gnutella] 6301 nodes, 20777 edges
+  [Seed] S=6296, N=0, I=5, R=0
+  Running SG-SNIR...
+  SG-SNIR: 42.1s
+  Running MaxExpectedH (full)...
+  SG-SNIR=42.103s  MaxExpH=92.442s  Speedup=2.2
+
+────────────────────────────────────────────────────────────
+  Dataset: Wiki-Vote
+[Wiki-Vote] 7115 nodes, 103689 edges
+  [Seed] S=7110, N=0, I=5, R=0
+  Running SG-SNIR...
+  SG-SNIR: 14.4s
+  Running MaxExpectedH (full)...
+  SG-SNIR=14.445s  MaxExpH=38.802s  Speedup=2.69
+
+  ✓ Saved → results/experiment5/scalability_summary.json
+
+  Dataset                   V          E    SG-SNIR      MaxExpH  Speedup
+  ────────────────── ──────── ────────── ────────── ──────────── ────────
+  HIV                  35,228     49,779     288.9s     299.992s    1.04×
+  p2p-Gnutella          6,301     20,777      42.1s      92.442s     2.2×
+  Wiki-Vote             7,115    103,689      14.4s      38.802s    2.69×

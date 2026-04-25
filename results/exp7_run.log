@@ -1,0 +1,26 @@
+
+======================================================================
+  EXPERIMENT 7 — KSCC Edge Selection Analysis
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+  [Seed] S=35223, N=0, I=5, R=0
+  Running SG-SNIR...
+  Running MaxExpectedH...
+
+  SG-SNIR edge categories:   {'internal': 0.0, 'bridge': 0.0, 'peripheral': 1.0}
+  MaxExpH edge categories:   {'internal': 0.0, 'bridge': 0.0, 'peripheral': 1.0}
+  ✓ Saved → results/experiment7/HIV_edge_analysis.json
+
+────────────────────────────────────────────────────────────
+  Dataset: Wiki-Vote
+[Wiki-Vote] 7115 nodes, 103689 edges
+  [Seed] S=7110, N=0, I=5, R=0
+  Running SG-SNIR...
+  Running MaxExpectedH...
+
+  SG-SNIR edge categories:   {'internal': 0.5, 'bridge': 0.1667, 'peripheral': 0.3333}
+  MaxExpH edge categories:   {'internal': 0.5, 'bridge': 0.1667, 'peripheral': 0.3333}
+  ✓ Saved → results/experiment7/Wiki-Vote_edge_analysis.json

@@ -202,7 +202,7 @@ def run_experiment(
     if run_degprod:
         t0 = time.time()
         deg_edges, _, _ = degree_product_blocking(
-            G, initial_S, initial_N, initial_I, k, verbose
+            G, initial_S, initial_N, initial_I, initial_R, k, verbose
         )
         # Compute H after all removals for fair comparison
         G_deg = G.copy()

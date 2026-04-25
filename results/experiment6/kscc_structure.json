@@ -1,0 +1,52 @@
+{
+  "results": [
+    {
+      "dataset": "HIV",
+      "n_nodes": 35228,
+      "n_edges": 49779,
+      "kscc_size": 62,
+      "kscc_fraction": 0.0018,
+      "rho_star": 6.2454,
+      "mean_gamma_W": 66.5,
+      "mean_C": 66.5,
+      "filter_ratio": 1.0,
+      "speedup_evals": 1.0
+    },
+    {
+      "dataset": "p2p-Gnutella",
+      "n_nodes": 6301,
+      "n_edges": 20777,
+      "kscc_size": 2068,
+      "kscc_fraction": 0.3282,
+      "rho_star": 4.8797,
+      "mean_gamma_W": 39.5,
+      "mean_C": 18.1,
+      "filter_ratio": 0.4582,
+      "speedup_evals": 2.41
+    },
+    {
+      "dataset": "Wiki-Vote",
+      "n_nodes": 7115,
+      "n_edges": 103689,
+      "kscc_size": 1300,
+      "kscc_fraction": 0.1827,
+      "rho_star": 44.5708,
+      "mean_gamma_W": 7.5,
+      "mean_C": 3.1,
+      "filter_ratio": 0.4133,
+      "speedup_evals": 2.29
+    },
+    {
+      "dataset": "soc-Epinions1",
+      "n_nodes": 75879,
+      "n_edges": 508837,
+      "kscc_size": 32223,
+      "kscc_fraction": 0.4247,
+      "rho_star": 82.7933,
+      "mean_gamma_W": 44.5,
+      "mean_C": 28.6,
+      "filter_ratio": 0.6427,
+      "speedup_evals": null
+    }
+  ]
+}

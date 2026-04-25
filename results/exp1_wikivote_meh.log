@@ -1,0 +1,9 @@
+[Wiki-Vote] 7115 nodes, 103689 edges
+  [Seed] S=7110, N=0, I=5, R=0
+  seed=42: SG=15.6257(8.5s)  MEH=15.6257(23.0s)
+  [Seed] S=7110, N=0, I=5, R=0
+  seed=49: SG=33.8019(447.3s)  MEH=32.5666(1787.6s)
+  [Seed] S=7110, N=0, I=5, R=0
+  seed=56: SG=17.0188(111.6s)  MEH=16.7880(239.8s)
+SG mean=22.1488  MEH mean=21.6601  gap=+2.2563%
+Saved.

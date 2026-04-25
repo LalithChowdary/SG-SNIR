@@ -1,0 +1,266 @@
+{
+  "dataset": "HIV",
+  "k": 20,
+  "SG-SNIR": {
+    "time_s": 296.066,
+    "selected_edges": [
+      {
+        "u": 10012,
+        "v": 10003,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 201306,
+        "v": 200323,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1842,
+        "v": 13196,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1816,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1817,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1818,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1819,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1820,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1821,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 5627,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12619,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 6971,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12620,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12621,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12622,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12623,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12624,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12625,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12626,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12627,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      }
+    ],
+    "category_fractions": {
+      "internal": 0.0,
+      "bridge": 0.0,
+      "peripheral": 1.0
+    },
+    "H_final": 39.620855298909945
+  },
+  "MaxExpectedH": {
+    "time_s": 299.712,
+    "selected_edges": [
+      {
+        "u": 10012,
+        "v": 10003,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 201306,
+        "v": 200323,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1842,
+        "v": 13196,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1816,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1817,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1818,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1819,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1820,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 1821,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 5627,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12619,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 6971,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12620,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12621,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12622,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12623,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12624,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12625,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12626,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 10696,
+        "v": 12627,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      }
+    ],
+    "category_fractions": {
+      "internal": 0.0,
+      "bridge": 0.0,
+      "peripheral": 1.0
+    },
+    "H_final": 39.620855298909945
+  }
+}

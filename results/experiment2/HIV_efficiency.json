@@ -1,0 +1,235 @@
+{
+  "dataset": "HIV",
+  "k": 20,
+  "sg_snir_log": [
+    {
+      "iteration": 0,
+      "gamma_W_size": 71,
+      "gamma_prime_size": 0,
+      "C_size": 71,
+      "eval_count": 71,
+      "wall_time_s": 16.9186,
+      "H_after": 50.455872
+    },
+    {
+      "iteration": 1,
+      "gamma_W_size": 70,
+      "gamma_prime_size": 0,
+      "C_size": 70,
+      "eval_count": 70,
+      "wall_time_s": 8.5242,
+      "H_after": 48.089734
+    },
+    {
+      "iteration": 2,
+      "gamma_W_size": 69,
+      "gamma_prime_size": 0,
+      "C_size": 69,
+      "eval_count": 69,
+      "wall_time_s": 8.0212,
+      "H_after": 47.619241
+    },
+    {
+      "iteration": 3,
+      "gamma_W_size": 68,
+      "gamma_prime_size": 0,
+      "C_size": 68,
+      "eval_count": 68,
+      "wall_time_s": 7.9142,
+      "H_after": 47.148748
+    },
+    {
+      "iteration": 4,
+      "gamma_W_size": 67,
+      "gamma_prime_size": 0,
+      "C_size": 67,
+      "eval_count": 67,
+      "wall_time_s": 7.835,
+      "H_after": 46.678255
+    },
+    {
+      "iteration": 5,
+      "gamma_W_size": 66,
+      "gamma_prime_size": 0,
+      "C_size": 66,
+      "eval_count": 66,
+      "wall_time_s": 7.7085,
+      "H_after": 46.207761
+    },
+    {
+      "iteration": 6,
+      "gamma_W_size": 65,
+      "gamma_prime_size": 0,
+      "C_size": 65,
+      "eval_count": 65,
+      "wall_time_s": 7.5486,
+      "H_after": 45.737268
+    },
+    {
+      "iteration": 7,
+      "gamma_W_size": 64,
+      "gamma_prime_size": 0,
+      "C_size": 64,
+      "eval_count": 64,
+      "wall_time_s": 7.4926,
+      "H_after": 45.266775
+    },
+    {
+      "iteration": 8,
+      "gamma_W_size": 63,
+      "gamma_prime_size": 0,
+      "C_size": 63,
+      "eval_count": 63,
+      "wall_time_s": 7.3903,
+      "H_after": 44.796281
+    },
+    {
+      "iteration": 9,
+      "gamma_W_size": 62,
+      "gamma_prime_size": 0,
+      "C_size": 62,
+      "eval_count": 62,
+      "wall_time_s": 7.2144,
+      "H_after": 44.325788
+    },
+    {
+      "iteration": 10,
+      "gamma_W_size": 61,
+      "gamma_prime_size": 0,
+      "C_size": 61,
+      "eval_count": 61,
+      "wall_time_s": 7.1375,
+      "H_after": 43.855295
+    },
+    {
+      "iteration": 11,
+      "gamma_W_size": 60,
+      "gamma_prime_size": 0,
+      "C_size": 60,
+      "eval_count": 60,
+      "wall_time_s": 7.0497,
+      "H_after": 43.384802
+    },
+    {
+      "iteration": 12,
+      "gamma_W_size": 59,
+      "gamma_prime_size": 0,
+      "C_size": 59,
+      "eval_count": 59,
+      "wall_time_s": 6.9228,
+      "H_after": 42.914308
+    },
+    {
+      "iteration": 13,
+      "gamma_W_size": 58,
+      "gamma_prime_size": 0,
+      "C_size": 58,
+      "eval_count": 58,
+      "wall_time_s": 6.7849,
+      "H_after": 42.443815
+    },
+    {
+      "iteration": 14,
+      "gamma_W_size": 57,
+      "gamma_prime_size": 0,
+      "C_size": 57,
+      "eval_count": 57,
+      "wall_time_s": 6.6893,
+      "H_after": 41.973322
+    },
+    {
+      "iteration": 15,
+      "gamma_W_size": 56,
+      "gamma_prime_size": 0,
+      "C_size": 56,
+      "eval_count": 56,
+      "wall_time_s": 7.0505,
+      "H_after": 41.502828
+    },
+    {
+      "iteration": 16,
+      "gamma_W_size": 55,
+      "gamma_prime_size": 0,
+      "C_size": 55,
+      "eval_count": 55,
+      "wall_time_s": 7.1708,
+      "H_after": 41.032335
+    },
+    {
+      "iteration": 17,
+      "gamma_W_size": 54,
+      "gamma_prime_size": 0,
+      "C_size": 54,
+      "eval_count": 54,
+      "wall_time_s": 7.2117,
+      "H_after": 40.561842
+    },
+    {
+      "iteration": 18,
+      "gamma_W_size": 53,
+      "gamma_prime_size": 0,
+      "C_size": 53,
+      "eval_count": 53,
+      "wall_time_s": 6.197,
+      "H_after": 40.091349
+    },
+    {
+      "iteration": 19,
+      "gamma_W_size": 52,
+      "gamma_prime_size": 0,
+      "C_size": 52,
+      "eval_count": 52,
+      "wall_time_s": 6.1315,
+      "H_after": 39.620855
+    }
+  ],
+  "max_expected_h_log": {
+    "extrapolated": false,
+    "H_history": [
+      50.455871853171786,
+      48.089734392644004,
+      47.61924110965879,
+      47.148747826673564,
+      46.678254543688325,
+      46.20776126070311,
+      45.73726797771788,
+      45.26677469473265,
+      44.79628141174743,
+      44.3257881287622,
+      43.855294845776974,
+      43.38480156279176,
+      42.91430827980653,
+      42.4438149968213,
+      41.973321713836086,
+      41.50282843085085,
+      41.03233514786563,
+      40.56184186488039,
+      40.09134858189517,
+      39.620855298909945
+    ],
+    "eval_counts": [
+      71,
+      70,
+      69,
+      68,
+      67,
+      66,
+      65,
+      64,
+      63,
+      62,
+      61,
+      60,
+      59,
+      58,
+      57,
+      56,
+      55,
+      54,
+      53,
+      52
+    ],
+    "total_time_s": 153.155
+  },
+  "meh_extrapolated": false
+}

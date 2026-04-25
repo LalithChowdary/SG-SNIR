@@ -1,0 +1,17 @@
+{
+  "dataset": "soc-Epinions1",
+  "k": 10,
+  "n_trials": 1,
+  "variant": "no_kscc_filter",
+  "sg_snir": {
+    "H_final": 57.00070399401935,
+    "total_evals": 286,
+    "time_s": 716.0046348571777
+  },
+  "no_kscc": {
+    "H_final": 49.974122625871544,
+    "total_evals": 445,
+    "time_s": 1050.4633131027222
+  },
+  "eval_speedup": 1.555944055944056
+}

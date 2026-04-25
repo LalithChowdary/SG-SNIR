@@ -1,0 +1,235 @@
+{
+  "dataset": "p2p-Gnutella",
+  "k": 20,
+  "sg_snir_log": [
+    {
+      "iteration": 0,
+      "gamma_W_size": 44,
+      "gamma_prime_size": 25,
+      "C_size": 1,
+      "eval_count": 1,
+      "wall_time_s": 0.1037,
+      "H_after": 27.11797
+    },
+    {
+      "iteration": 1,
+      "gamma_W_size": 43,
+      "gamma_prime_size": 24,
+      "C_size": 24,
+      "eval_count": 24,
+      "wall_time_s": 1.7092,
+      "H_after": 26.781869
+    },
+    {
+      "iteration": 2,
+      "gamma_W_size": 42,
+      "gamma_prime_size": 23,
+      "C_size": 23,
+      "eval_count": 23,
+      "wall_time_s": 1.633,
+      "H_after": 26.447576
+    },
+    {
+      "iteration": 3,
+      "gamma_W_size": 41,
+      "gamma_prime_size": 22,
+      "C_size": 22,
+      "eval_count": 22,
+      "wall_time_s": 1.5798,
+      "H_after": 26.117313
+    },
+    {
+      "iteration": 4,
+      "gamma_W_size": 40,
+      "gamma_prime_size": 21,
+      "C_size": 21,
+      "eval_count": 21,
+      "wall_time_s": 1.4883,
+      "H_after": 25.786987
+    },
+    {
+      "iteration": 5,
+      "gamma_W_size": 39,
+      "gamma_prime_size": 20,
+      "C_size": 20,
+      "eval_count": 20,
+      "wall_time_s": 1.4282,
+      "H_after": 25.454977
+    },
+    {
+      "iteration": 6,
+      "gamma_W_size": 38,
+      "gamma_prime_size": 19,
+      "C_size": 19,
+      "eval_count": 19,
+      "wall_time_s": 1.3637,
+      "H_after": 25.121383
+    },
+    {
+      "iteration": 7,
+      "gamma_W_size": 37,
+      "gamma_prime_size": 18,
+      "C_size": 18,
+      "eval_count": 18,
+      "wall_time_s": 1.2724,
+      "H_after": 24.791999
+    },
+    {
+      "iteration": 8,
+      "gamma_W_size": 36,
+      "gamma_prime_size": 17,
+      "C_size": 17,
+      "eval_count": 17,
+      "wall_time_s": 1.1826,
+      "H_after": 24.463045
+    },
+    {
+      "iteration": 9,
+      "gamma_W_size": 35,
+      "gamma_prime_size": 16,
+      "C_size": 16,
+      "eval_count": 16,
+      "wall_time_s": 1.1197,
+      "H_after": 24.134389
+    },
+    {
+      "iteration": 10,
+      "gamma_W_size": 34,
+      "gamma_prime_size": 15,
+      "C_size": 15,
+      "eval_count": 15,
+      "wall_time_s": 1.0529,
+      "H_after": 23.807469
+    },
+    {
+      "iteration": 11,
+      "gamma_W_size": 33,
+      "gamma_prime_size": 14,
+      "C_size": 14,
+      "eval_count": 14,
+      "wall_time_s": 0.947,
+      "H_after": 23.482046
+    },
+    {
+      "iteration": 12,
+      "gamma_W_size": 32,
+      "gamma_prime_size": 13,
+      "C_size": 13,
+      "eval_count": 13,
+      "wall_time_s": 0.8879,
+      "H_after": 23.157698
+    },
+    {
+      "iteration": 13,
+      "gamma_W_size": 31,
+      "gamma_prime_size": 12,
+      "C_size": 12,
+      "eval_count": 12,
+      "wall_time_s": 0.7919,
+      "H_after": 22.835779
+    },
+    {
+      "iteration": 14,
+      "gamma_W_size": 30,
+      "gamma_prime_size": 11,
+      "C_size": 11,
+      "eval_count": 11,
+      "wall_time_s": 0.7355,
+      "H_after": 22.512183
+    },
+    {
+      "iteration": 15,
+      "gamma_W_size": 29,
+      "gamma_prime_size": 10,
+      "C_size": 10,
+      "eval_count": 10,
+      "wall_time_s": 0.6596,
+      "H_after": 22.190139
+    },
+    {
+      "iteration": 16,
+      "gamma_W_size": 28,
+      "gamma_prime_size": 9,
+      "C_size": 9,
+      "eval_count": 9,
+      "wall_time_s": 0.5839,
+      "H_after": 21.868049
+    },
+    {
+      "iteration": 17,
+      "gamma_W_size": 27,
+      "gamma_prime_size": 8,
+      "C_size": 8,
+      "eval_count": 8,
+      "wall_time_s": 0.5075,
+      "H_after": 21.547674
+    },
+    {
+      "iteration": 18,
+      "gamma_W_size": 26,
+      "gamma_prime_size": 7,
+      "C_size": 7,
+      "eval_count": 7,
+      "wall_time_s": 0.4321,
+      "H_after": 21.227602
+    },
+    {
+      "iteration": 19,
+      "gamma_W_size": 25,
+      "gamma_prime_size": 6,
+      "C_size": 6,
+      "eval_count": 6,
+      "wall_time_s": 0.3687,
+      "H_after": 20.909355
+    }
+  ],
+  "max_expected_h_log": {
+    "extrapolated": false,
+    "H_history": [
+      27.08990224037269,
+      26.75561301157267,
+      26.425360568704114,
+      26.095035775014317,
+      25.763038886663885,
+      25.42945586766806,
+      25.100072414024353,
+      24.771119376247775,
+      24.442465074971786,
+      24.115545241749576,
+      23.790122328709543,
+      23.46577926333993,
+      23.143864118742933,
+      22.820280765126704,
+      22.498239198546255,
+      22.17615251961682,
+      21.85577843791861,
+      21.535712113094817,
+      21.217466064238707,
+      20.90935520898396
+    ],
+    "eval_counts": [
+      44,
+      43,
+      42,
+      41,
+      40,
+      39,
+      38,
+      37,
+      36,
+      35,
+      34,
+      33,
+      32,
+      31,
+      30,
+      29,
+      28,
+      27,
+      26,
+      25
+    ],
+    "total_time_s": 46.603
+  },
+  "meh_extrapolated": false
+}

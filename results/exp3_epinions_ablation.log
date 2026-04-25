@@ -1,0 +1,7 @@
+[soc-Epinions1] 75879 nodes, 508837 edges
+  [Seed] S=75874, N=0, I=5, R=0
+[Seed] S=75874, N=0, I=5, R=0
+SG-SNIR  : H_final=57.0007  evals=286  time=716.0s
+No KSCC  : H_final=49.9741  evals=445  time=1050.5s
+Eval speedup: 1.56x  Quality gap: +14.060%
+Saved.

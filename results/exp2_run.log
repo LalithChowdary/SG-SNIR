@@ -1,0 +1,34 @@
+
+======================================================================
+  EXPERIMENT 2 — Computational Efficiency
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+  [Seed] S=35223, N=0, I=5, R=0
+  Running SG-SNIR (instrumented)...
+  Running MaxExpectedH...
+  ✓ SG-SNIR total evals: 1230
+  ✓ MaxExpH total evals: 1230
+  ✓ Saved → results/experiment2/HIV_efficiency.json
+
+────────────────────────────────────────────────────────────
+  Dataset: p2p-Gnutella
+[p2p-Gnutella] 6301 nodes, 20777 edges
+  [Seed] S=6296, N=0, I=5, R=0
+  Running SG-SNIR (instrumented)...
+  Running MaxExpectedH...
+  ✓ SG-SNIR total evals: 286
+  ✓ MaxExpH total evals: 690
+  ✓ Saved → results/experiment2/p2p-Gnutella_efficiency.json
+
+────────────────────────────────────────────────────────────
+  Dataset: Wiki-Vote
+[Wiki-Vote] 7115 nodes, 103689 edges
+  [Seed] S=7110, N=0, I=5, R=0
+  Running SG-SNIR (instrumented)...
+  Running MaxExpectedH...
+  ✓ SG-SNIR total evals: 34
+  ✓ MaxExpH total evals: 78
+  ✓ Saved → results/experiment2/Wiki-Vote_efficiency.json

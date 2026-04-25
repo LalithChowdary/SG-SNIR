@@ -1,0 +1,19 @@
+
+======================================================================
+  EXPERIMENT 5 — Scalability Analysis
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: soc-Epinions1
+[soc-Epinions1] 75879 nodes, 508837 edges
+  [Seed] S=75874, N=0, I=5, R=0
+  Running SG-SNIR...
+  SG-SNIR: 1631.6s
+  Running MaxExpectedH (full)...
+  SG-SNIR=1631.627s  MaxExpH=2147.87s  Speedup=1.32
+
+  ✓ Saved → results/experiment5/scalability_summary.json
+
+  Dataset                   V          E    SG-SNIR      MaxExpH  Speedup
+  ────────────────── ──────── ────────── ────────── ──────────── ────────
+  soc-Epinions1        75,879    508,837    1631.6s     2147.87s    1.32×

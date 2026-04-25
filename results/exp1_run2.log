@@ -1,0 +1,252 @@
+
+======================================================================
+  EXPERIMENT 1 — Primary Effectiveness: H vs k
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+
+  [HIV] p_mode=fixed, eta_low
+    Trial 1/10 (seed=42)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=35223, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/HIV_fixed_eta_low.json
+
+  [HIV] p_mode=variable, eta_low
+    Trial 1/10 (seed=42)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=35223, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/HIV_variable_eta_low.json
+
+  [HIV] p_mode=fixed, eta_high
+    Trial 1/10 (seed=42)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=35223, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/HIV_fixed_eta_high.json
+
+  [HIV] p_mode=variable, eta_high
+    Trial 1/10 (seed=42)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=35223, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=35223, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/HIV_variable_eta_high.json
+
+────────────────────────────────────────────────────────────
+  Dataset: p2p-Gnutella
+[p2p-Gnutella] 6301 nodes, 20777 edges
+
+  [p2p-Gnutella] p_mode=fixed, eta_low
+    Trial 1/10 (seed=42)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=6296, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/p2p-Gnutella_fixed_eta_low.json
+
+  [p2p-Gnutella] p_mode=variable, eta_low
+    Trial 1/10 (seed=42)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=6296, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/p2p-Gnutella_variable_eta_low.json
+
+  [p2p-Gnutella] p_mode=fixed, eta_high
+    Trial 1/10 (seed=42)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=6296, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/p2p-Gnutella_fixed_eta_high.json
+
+  [p2p-Gnutella] p_mode=variable, eta_high
+    Trial 1/10 (seed=42)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 2/10 (seed=49)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 3/10 (seed=56)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 4/10 (seed=63)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 5/10 (seed=70)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 6/10 (seed=77)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 7/10 (seed=84)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 8/10 (seed=91)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 9/10 (seed=98)
+  [Seed] S=6296, N=0, I=5, R=0
+    Trial 10/10 (seed=105)
+  [Seed] S=6296, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/p2p-Gnutella_variable_eta_high.json
+
+────────────────────────────────────────────────────────────
+  Dataset: Wiki-Vote
+[Wiki-Vote] 7115 nodes, 103689 edges
+
+  [Wiki-Vote] p_mode=fixed, eta_low
+    Trial 1/5 (seed=42)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 2/5 (seed=49)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 3/5 (seed=56)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 4/5 (seed=63)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 5/5 (seed=70)
+  [Seed] S=7110, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/Wiki-Vote_fixed_eta_low.json
+
+  [Wiki-Vote] p_mode=variable, eta_low
+    Trial 1/5 (seed=42)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 2/5 (seed=49)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 3/5 (seed=56)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 4/5 (seed=63)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 5/5 (seed=70)
+  [Seed] S=7110, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/Wiki-Vote_variable_eta_low.json
+
+  [Wiki-Vote] p_mode=fixed, eta_high
+    Trial 1/5 (seed=42)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 2/5 (seed=49)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 3/5 (seed=56)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 4/5 (seed=63)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 5/5 (seed=70)
+  [Seed] S=7110, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/Wiki-Vote_fixed_eta_high.json
+
+  [Wiki-Vote] p_mode=variable, eta_high
+    Trial 1/5 (seed=42)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 2/5 (seed=49)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 3/5 (seed=56)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 4/5 (seed=63)
+  [Seed] S=7110, N=0, I=5, R=0
+    Trial 5/5 (seed=70)
+  [Seed] S=7110, N=0, I=5, R=0
+    ✓ Saved → results/experiment1/Wiki-Vote_variable_eta_high.json

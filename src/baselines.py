@@ -109,6 +109,7 @@ def degree_product_blocking(
     initial_S: Set,
     initial_N: Set,
     initial_I: Set,
+    initial_R: Set,
     k: int,
     verbose: bool = False,
 ) -> Tuple[List[Tuple], List[None], List[int]]:

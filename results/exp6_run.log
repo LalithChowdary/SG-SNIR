@@ -1,0 +1,49 @@
+
+======================================================================
+  EXPERIMENT 6 — KSCC Structure Analysis
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+  [Seed] S=35223, N=0, I=5, R=0
+  KSCC size: 62 / 35228 (0.18%)
+  ρ(S*) = 6.2454
+  Filter ratio |C|/|Γ(W)| = 1.0000
+  Speedup (from Exp2) = 1.0
+
+────────────────────────────────────────────────────────────
+  Dataset: p2p-Gnutella
+[p2p-Gnutella] 6301 nodes, 20777 edges
+  [Seed] S=6296, N=0, I=5, R=0
+  KSCC size: 2068 / 6301 (32.82%)
+  ρ(S*) = 4.8797
+  Filter ratio |C|/|Γ(W)| = 0.4582
+  Speedup (from Exp2) = 2.41
+
+────────────────────────────────────────────────────────────
+  Dataset: Wiki-Vote
+[Wiki-Vote] 7115 nodes, 103689 edges
+  [Seed] S=7110, N=0, I=5, R=0
+  KSCC size: 1300 / 7115 (18.27%)
+  ρ(S*) = 44.5708
+  Filter ratio |C|/|Γ(W)| = 0.4133
+  Speedup (from Exp2) = 2.29
+
+────────────────────────────────────────────────────────────
+  Dataset: soc-Epinions1
+[soc-Epinions1] 75879 nodes, 508837 edges
+  [Seed] S=75874, N=0, I=5, R=0
+  KSCC size: 32223 / 75879 (42.47%)
+  ρ(S*) = 82.7933
+  Filter ratio |C|/|Γ(W)| = 0.6427
+  Speedup (from Exp2) = N/A (run Exp2 first)
+
+  ✓ Saved → results/experiment6/kscc_structure.json
+
+  Dataset              KSCC   Frac%     Γ(W)     |C|   Ratio  Speedup
+  ────────────────── ────── ─────── ──────── ─────── ─────── ────────
+  HIV                    62    0.2%       66      66   1.000     1.0×
+  p2p-Gnutella        2,068   32.8%       40      18   0.458    2.41×
+  Wiki-Vote           1,300   18.3%        8       3   0.413    2.29×
+  soc-Epinions1      32,223   42.5%       44      29   0.643        —

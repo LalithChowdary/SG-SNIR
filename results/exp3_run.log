@@ -1,0 +1,42 @@
+
+======================================================================
+  EXPERIMENT 3 — Ablation Study
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+  [Seed] S=35223, N=0, I=5, R=0
+  Trial 1/5 (seed=42)
+  [Seed] S=35223, N=0, I=5, R=0
+  Trial 2/5 (seed=49)
+  [Seed] S=35223, N=0, I=5, R=0
+  Trial 3/5 (seed=56)
+  [Seed] S=35223, N=0, I=5, R=0
+  Trial 4/5 (seed=63)
+  [Seed] S=35223, N=0, I=5, R=0
+  Trial 5/5 (seed=70)
+    Variant: Full SG-SNIR           -> H_final(avg)=32.8458  evals(avg)=942.0  time(avg)=206.707s
+    Variant: No KSCC filter         -> H_final(avg)=32.8458  evals(avg)=942.0  time(avg)=207.302s
+    Variant: No bridge edges        -> H_final(avg)=32.8458  evals(avg)=942.0  time(avg)=199.367s
+    Variant: No spectral threshold  -> H_final(avg)=32.8458  evals(avg)=942.0  time(avg)=199.923s
+  ✓ Saved → results/experiment3/HIV_ablation.json
+
+────────────────────────────────────────────────────────────
+  Dataset: p2p-Gnutella
+[p2p-Gnutella] 6301 nodes, 20777 edges
+  [Seed] S=6296, N=0, I=5, R=0
+  Trial 1/5 (seed=42)
+  [Seed] S=6296, N=0, I=5, R=0
+  Trial 2/5 (seed=49)
+  [Seed] S=6296, N=0, I=5, R=0
+  Trial 3/5 (seed=56)
+  [Seed] S=6296, N=0, I=5, R=0
+  Trial 4/5 (seed=63)
+  [Seed] S=6296, N=0, I=5, R=0
+  Trial 5/5 (seed=70)
+    Variant: Full SG-SNIR           -> H_final(avg)=20.0493  evals(avg)=227.6  time(avg)=19.762s
+    Variant: No KSCC filter         -> H_final(avg)=20.0361  evals(avg)=618.0  time(avg)=59.575s
+    Variant: No bridge edges        -> H_final(avg)=20.0900  evals(avg)=228.4  time(avg)=19.026s
+    Variant: No spectral threshold  -> H_final(avg)=20.0361  evals(avg)=264.4  time(avg)=22.378s
+  ✓ Saved → results/experiment3/p2p-Gnutella_ablation.json

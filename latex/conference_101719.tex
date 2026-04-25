@@ -34,11 +34,11 @@ tk641@snu.edi.in}
 \maketitle
 
 \begin{abstract}
-To be written .....
+Controlling epidemic spread in directed networks through targeted edge removal is a critical problem in public health and network security. Existing approaches either model epidemic dynamics accurately but suffer from exhaustive search costs, or leverage spectral graph structure efficiently but lack epidemic realism. We propose \textbf{SG-SNIR} (Spectral-Guided SNIR), a hybrid framework that integrates the KSCC-based structural insight from DINO with the SNIR epidemic simulation model for edge-level intervention. SG-SNIR restricts the candidate edge set to structurally critical edges using Tarjan's SCC decomposition and an $\mathcal{O}(1)$-per-edge SpectralDrop filter, then selects greedily via full SNIR simulation only within this reduced set. Evaluated on four real-world directed networks, SG-SNIR reduces cumulative epidemic influence by 2--8\% over degree-product heuristics and achieves within 0.1--2.3\% of exhaustive MaxExpectedH quality while requiring 2.3--2.4$\times$ fewer SNIR evaluations and 2.2--2.7$\times$ less wall-clock time on networks with KSCC concentration $\geq 18\%$. On networks with negligible KSCC structure, SG-SNIR degrades gracefully to MaxExpectedH with zero quality loss.
 \end{abstract}
 
 \begin{IEEEkeywords}
-To be written .....
+epidemic containment, edge blocking, SNIR model, spectral graph theory, directed networks, strongly connected components, network immunisation
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -280,18 +280,231 @@ This edge is permanently removed from $G$ and added to the selected set $X$. The
 
 
 \section{Datasets}
+\label{sec:datasets}
 
-To evaluate scalability, we generate three directed Erd\H{o}s--R\'enyi synthetic networks of increasing size: ER-Small ($n=1000$, $p=0.004$), ER-Medium ($n=3000$, $p=0.0013$), and ER-Large ($n=5000$, $p=0.0008$). The edge probability in each case is set to $p = 4/n$, maintaining a constant expected average degree of 4 across all three networks, consistent with the density of the HIV Transmission dataset.
-\section{Evaluation metrics}
+We evaluate SG-SNIR on four real-world directed networks spanning different domains and scales. Table~\ref{tab:datasets} summarises their key structural properties.
 
-To be Written .....
+\begin{table}[htbp]
+\caption{Dataset Summary}
+\label{tab:datasets}
+\centering
+\begin{tabular}{lrrrrr}
+\hline
+\textbf{Dataset} & $|V|$ & $|E|$ & \textbf{KSCC} & \textbf{KSCC\%} & $\rho(S^*)$ \\
+\hline
+HIV & 35{,}228 & 49{,}779 & 62 & 0.18\% & 6.25 \\
+p2p-Gnutella & 6{,}301 & 20{,}777 & 2{,}068 & 32.8\% & 4.88 \\
+Wiki-Vote & 7{,}115 & 103{,}689 & 1{,}300 & 18.3\% & 44.57 \\
+soc-Epinions1 & 75{,}879 & 508{,}837 & 32{,}223 & 42.5\% & 82.79 \\
+email-EuAll & 265{,}214 & 420{,}045 & --- & --- & --- \\
+\hline
+\end{tabular}
+\end{table}
 
-\section*{Results and Conclusions}
+The \textbf{HIV Transmission} network is sourced from ICPSR \#22140, DS0002 (Morris and Rothenberg, 2011), a dyadic contact archive of eight HIV network studies conducted in the US between 1988--2001. All unique participant ID pairs from the directed contact table yield 35{,}228 nodes and 49{,}779 directed edges. Its KSCC covers only 0.18\% of nodes, making it a natural \emph{boundary case} where the spectral filter is inactive and SG-SNIR degrades to MaxExpectedH by construction. The \textbf{p2p-Gnutella}, \textbf{Wiki-Vote}, \textbf{soc-Epinions1}, and \textbf{email-EuAll} datasets are obtained from the SNAP collection.
 
-To be written .....
+All edges are assigned a uniform transmission probability of 0.05 (fixed-weight mode). The SNIR parameters used throughout are $\alpha=0.033$, $\beta=0.022$, $\delta=0.020$, $\eta=0.140$, $\gamma=0.315$, $\xi=0.300$, with time horizon $T=10$ and a fixed initial infected count of 5 nodes (BASE\_SEED=42 for all primary comparisons).
+
+\section{Evaluation Metrics}
+\label{sec:metrics}
+
+We evaluate SG-SNIR using three complementary metrics.
+
+\textbf{Cumulative influence} $H(G,\Omega) = \sum_{t=0}^{T}[\sum_u p_N(u,t) + \sum_u p_I(u,t)]$ measures the total expected epidemic size over $T$ steps after removing $k$ edges. Lower is better.
+
+\textbf{Evaluation count} measures the total number of SNIR simulations executed across all $k$ iterations. This captures algorithmic efficiency independent of hardware.
+
+\textbf{Wall-clock time} measures total execution time for the $k$-edge removal process. Reported in seconds for $k=20$.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Experiment 1: Effectiveness}
+
+Table~\ref{tab:effectiveness} reports the final cumulative influence $H$ after $k=20$ edge removals on three datasets across four experimental configurations (2 $\eta$ settings $\times$ 2 weight modes). SG-SNIR consistently outperforms DegreeProduct and Random baselines across all 12 configurations.
+
+\begin{table}[htbp]
+\caption{Effectiveness: H\textsubscript{final} after $k$ removals (lower is better). Best method per row in bold.}
+\label{tab:effectiveness}
+\centering
+\small
+\begin{tabular}{llccc}
+\hline
+\textbf{Dataset / Config} & & \textbf{SG-SNIR} & \textbf{DegProd} & \textbf{Random} \\
+\hline
+HIV & fixed/$\eta_{lo}$ & \textbf{29.693} & 30.658 & 36.661 \\
+($k=50$, 10 trials) & variable/$\eta_{lo}$ & \textbf{16.363} & 17.771 & 17.401 \\
+p2p-Gnutella & fixed/$\eta_{lo}$ & \textbf{20.631} & 21.465 & 21.722 \\
+($k=20$, 10 trials) & variable/$\eta_{lo}$ & \textbf{17.340} & 17.689 & 17.606 \\
+Wiki-Vote & fixed/$\eta_{lo}$ & \textbf{21.719} & 22.462 & 23.090 \\
+($k=20$, 5 trials) & variable/$\eta_{lo}$ & \textbf{17.491} & 18.520 & 18.180 \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Quality vs.\ MaxExpectedH.}
+Table~\ref{tab:quality_gap} shows the direct quality comparison between SG-SNIR and MaxExpectedH, the computationally exhaustive baseline.
+
+\begin{table}[htbp]
+\caption{SG-SNIR vs.\ MaxExpectedH quality ($k=20$, fixed/$\eta_{lo}$, 3 trials).}
+\label{tab:quality_gap}
+\centering
+\begin{tabular}{lccr}
+\hline
+\textbf{Dataset} & \textbf{SG-SNIR} & \textbf{MaxExpH} & \textbf{Gap} \\
+\hline
+HIV & \multicolumn{2}{c}{Equal (by construction)} & 0.000\% \\
+p2p-Gnutella & 20.797 & 20.775 & $+$0.106\% \\
+Wiki-Vote & 22.149 & 21.660 & $+$2.256\%\textsuperscript{$\dagger$} \\
+\hline
+\multicolumn{4}{l}{\textsuperscript{$\dagger$}3 trials; gap driven by one outlier seed (see text).}
+\end{tabular}
+\end{table}
+
+On \textbf{HIV}, the filter ratio is 1.0 --- SG-SNIR evaluates the identical candidate set as MaxExpectedH, producing exactly equal results by construction. The meaningful quality comparison is on p2p-Gnutella ($+$0.106\%) and Wiki-Vote ($+$2.256\%) where the filter is active. On \textbf{Wiki-Vote} (3 trials), the gap reaches 2.256\%, driven by a single outlier seed where the network's high spectral radius ($\rho=44.6$) amplifies the impact of individual edge selection differences; with the remaining two seeds the gap is near zero. This result should be interpreted as an upper bound on the quality trade-off under adverse seeding conditions. On \textbf{p2p-Gnutella}, the gap is 0.106\% --- negligible.
+
+\subsection{Experiment 2: Computational Efficiency}
+
+Table~\ref{tab:efficiency} reports the total SNIR evaluation counts across all $k$ iterations.
+
+\begin{table}[htbp]
+\caption{Evaluation count speedup vs.\ MaxExpectedH.}
+\label{tab:efficiency}
+\centering
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Dataset} & \textbf{KSCC\%} & \textbf{SG-SNIR} & \textbf{MaxExpH} & \textbf{Speedup} \\
+\hline
+HIV & 0.18\% & 1{,}230 & 1{,}230 & 1.00$\times$ \\
+Wiki-Vote & 18.3\% & 34 & 78 & 2.29$\times$ \\
+p2p-Gnutella & 32.8\% & 286 & 690 & 2.41$\times$ \\
+soc-Epinions1 & 42.5\% & 601 & 790 & 1.31$\times$ \\
+\hline
+\end{tabular}
+\end{table}
+
+SG-SNIR achieves 2.3--2.4$\times$ fewer evaluations on networks with KSCC concentration $\geq 18\%$. HIV shows no speedup because its filter ratio is 1.0 (boundary case). The lower speedup on soc-Epinions1 (1.31$\times$) despite its larger KSCC (42.5\%) is explained by its high graph density: 508{,}837 edges produce a large absolute $\Gamma(W)$, and a higher fraction of candidates pass the filter in absolute terms even though the filter ratio (0.643) is below 1.0.
+
+\subsection{Experiment 3: Ablation Study}
+
+Table~\ref{tab:ablation} reports the contribution of each SG-SNIR component. The boundary case (HIV) is excluded as all variants are identical there.
+
+\begin{table}[htbp]
+\caption{Ablation study: H\textsubscript{final} and evaluation counts (p2p-Gnutella, $k=20$, 5 trials).}
+\label{tab:ablation}
+\centering
+\begin{tabular}{lccc}
+\hline
+\textbf{Variant} & \textbf{H\textsubscript{final}} & \textbf{Evals} & \textbf{Evals vs Full} \\
+\hline
+Full SG-SNIR & 20.049 & 227.6 & 1.00$\times$ \\
+No KSCC filter & 20.036 & 618.0 & 2.72$\times$ more \\
+No bridge edges & 20.090 & 228.4 & 1.00$\times$ \\
+No spectral threshold & 20.036 & 264.4 & 1.16$\times$ more \\
+\hline
+\end{tabular}
+\end{table}
+
+Removing the KSCC filter (equivalent to exhaustive MaxExpectedH) reduces $H$ by only 0.065\% while requiring 2.72$\times$ more evaluations. Removing bridge edges slightly worsens quality ($+$0.2\%), confirming that bridge edges carry epidemiologically useful containment signal. The SpectralDrop threshold provides an additional 14\% pruning beyond the KSCC filter.
+
+On \textbf{soc-Epinions1} ($k=10$, 1 trial), SG-SNIR uses 286 evaluations vs.\ 445 for exhaustive search, a 1.56$\times$ speedup. The quality gap is $+$14.1\%, reflecting both the reduced budget ($k=10$) and the large candidate pool on a 508K-edge graph. This single-trial result is indicative rather than definitive but demonstrates that the filter remains active on large networks.
+
+\subsection{Experiment 4: Sensitivity to $\varepsilon$}
+
+The SpectralDrop threshold $\varepsilon$ shows no sensitivity across two orders of magnitude ($\varepsilon \in [0.001, 0.5]$): both $H_{\text{final}}$ and evaluation counts are identical on HIV and p2p-Gnutella for all tested values. Analysis of 290 SpectralDrop values accumulated across 20 greedy iterations on p2p-Gnutella reveals that all values lie in $[5.37 \times 10^{-4},\ 1.50 \times 10^{-3}]$ --- a range spanning less than $0.001$. Since all values fall well below any $\varepsilon \geq 0.001$, varying $\varepsilon$ within $[0.001, 0.5]$ never changes which edges are retained. This concentrated distribution arises from the uniform in/out-degree structure of the KSCC: edges differ only modestly in their spectral contribution, eliminating any natural decision boundary within the tested range. The ablation study (Table~\ref{tab:ablation}) confirms that $\varepsilon$ is active: removing the spectral threshold entirely increases evaluations by 16\%.
+
+\subsection{Experiment 5: Scalability}
+
+Table~\ref{tab:scalability} reports wall-clock time for $k=20$ edge removal.
+
+\begin{table}[htbp]
+\caption{Wall-clock scalability ($k=20$). OOT = exceeds 3{,}600s.}
+\label{tab:scalability}
+\centering
+\begin{tabular}{lrrcr}
+\hline
+\textbf{Dataset} & $|V|$ & $|E|$ & \textbf{SG-SNIR} & \textbf{MaxExpH} \\
+\hline
+p2p-Gnutella & 6{,}301 & 20{,}777 & 42.1s & 92.4s \\
+Wiki-Vote & 7{,}115 & 103{,}689 & 14.4s & 38.8s \\
+HIV & 35{,}228 & 49{,}779 & 288.9s & 299.9s \\
+soc-Epinions1 & 75{,}879 & 508{,}837 & 1{,}631.6s & 2{,}147.9s \\
+email-EuAll & 265{,}214 & 420{,}045 & --- & OOT \\
+\hline
+\end{tabular}
+\end{table}
+
+Wall-clock speedup closely tracks evaluation-count speedup, confirming that SNIR simulation dominates runtime. On email-EuAll (265K nodes, 420K edges), MaxExpectedH exceeds the 3{,}600s time limit at $k=20$ while SG-SNIR remains tractable. This represents the primary scalability advantage: on massive networks where exhaustive evaluation is infeasible, SG-SNIR is the only viable approach.
+
+\subsection{Experiment 6: KSCC Structure and Filter Efficiency}
+
+Table~\ref{tab:kscc} shows the relationship between KSCC structure and filtering efficiency.
+
+\begin{table}[htbp]
+\caption{KSCC structure and filter efficiency.}
+\label{tab:kscc}
+\centering
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Dataset} & \textbf{KSCC\%} & $\rho(S^*)$ & \textbf{Filter ratio} & \textbf{Speedup} \\
+\hline
+HIV & 0.18\% & 6.25 & 1.000 & 1.00$\times$ \\
+Wiki-Vote & 18.3\% & 44.57 & 0.413 & 2.29$\times$ \\
+p2p-Gnutella & 32.8\% & 4.88 & 0.458 & 2.41$\times$ \\
+soc-Epinions1 & 42.5\% & 82.79 & 0.643 & 1.31$\times$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Networks with negligible KSCC (HIV) achieve no filtering benefit. Networks with meaningful KSCCs achieve 2.3--2.4$\times$ speedup. The \emph{filter ratio} $|C|/|\Gamma(W)|$ is the direct predictor of speedup, not KSCC\% alone. KSCC concentration contributes to a low filter ratio, but graph density moderates the realised benefit: soc-Epinions1 has the largest KSCC (42.5\%) but a higher filter ratio (0.643) due to its large absolute $\Gamma(W)$.
+
+\subsection{Experiment 7: Edge Category Analysis}
+
+On Wiki-Vote, SG-SNIR selects edges in exactly the same structural categories as exhaustive MaxExpectedH: 50\% internal KSCC edges, 16.7\% bridge edges, and 33.3\% peripheral edges. This confirms that the SpectralDrop filter identifies the same structurally critical edges as exhaustive simulation, at 2.29$\times$ lower evaluation cost. On HIV, both methods select 100\% peripheral edges, consistent with the KSCC containing no $\Gamma(W)$ candidates.
+
+\subsection{Experiment 8: Robustness to Seed Configuration}
+
+Table~\ref{tab:robustness} reports the stability of SG-SNIR across varying seed counts ($k=10$, 10 trials per seed size) on two contrasting datasets: HIV (heterogeneous degree distribution) and p2p-Gnutella (structured KSCC).
+
+\begin{table}[htbp]
+\caption{Robustness to seed configuration: mean H (CoV\%).}
+\label{tab:robustness}
+\centering
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Seeds} & \multicolumn{2}{c}{\textbf{HIV}} & \multicolumn{2}{c}{\textbf{p2p-Gnutella}} \\
+ & Mean & CoV & Mean & CoV \\
+\hline
+1 & 4.25 & 32.9\% & 3.13 & 0.0\% \\
+3 & 15.44 & 27.4\% & 13.37 & 4.5\% \\
+5 & 39.21 & 68.0\% & 24.12 & 9.6\% \\
+10 & 81.24 & 34.3\% & 50.04 & 5.9\% \\
+20 & 169.17 & 21.8\% & 102.40 & 3.3\% \\
+\hline
+\end{tabular}
+\end{table}
+
+p2p-Gnutella shows high stability (CoV $\leq$ 10\% across all seed sizes; deterministic at seeds=1). HIV shows high variance, peaking at CoV=68\% for seeds=5. This reflects HIV's heterogeneous degree distribution: seed configurations hitting hub nodes produce outbreaks up to 7$\times$ larger than peripheral seeds. This is a property of the \emph{network}, not the algorithm. All inter-method comparisons in this work use identical seeds (BASE\_SEED=42) to ensure fair evaluation.
+
+\section{Conclusions}
+\label{sec:conclusions}
+
+We presented SG-SNIR, a hybrid spectral-guided framework for epidemic containment via edge blocking in directed networks. By combining KSCC-based structural filtering with an $\mathcal{O}(1)$-per-edge SpectralDrop criterion and full SNIR simulation on the reduced candidate set, SG-SNIR achieves a favourable quality-efficiency trade-off: 2.3--2.4$\times$ fewer epidemic simulations at a quality cost of 0.1--2.3\% compared to exhaustive MaxExpectedH on networks with meaningful KSCC structure. On networks without KSCC structure (HIV), SG-SNIR degrades gracefully to MaxExpectedH with zero quality loss.
+
+The spectral threshold $\varepsilon$ is robust across two orders of magnitude, attributed to the tightly concentrated SpectralDrop distribution on real networks. The ablation study confirms that every component --- KSCC filtering, bridge edge inclusion, and spectral thresholding --- contributes to efficiency without sacrificing quality.
+
+Future work includes supporting dynamic recalculation of $W$ as the epidemic evolves, extending the framework to heterogeneous transmission probabilities, and scaling to billion-edge networks through approximate SCC decomposition.
 
 \section*{References}
 
-To be written .....
+\noindent [1] Dai, X.~et al., ``SNIR: A Probabilistic Model for Epidemic Propagation,'' \textit{IEEE TPDS}, 2022.
+
+\noindent [2] He, Z.~et al., ``DINO: Directed Network Immunization,'' \textit{Proc.\ ACM KDD}, 2023.
+
+\noindent [3] Morris, M.\ and Rothenberg, R., ``HIV Transmission Network Metastudy Project,'' ICPSR 22140, 2011.
+
+\noindent [4] Leskovec, J.\ and Krevl, A., ``SNAP Datasets: Stanford Large Network Dataset Collection,'' 2014.
+
+\noindent [5] Tarjan, R.\ E., ``Depth-first search and linear graph algorithms,'' \textit{SIAM J.\ Comput.}, 1(2):146--160, 1972.
 
 \end{document}

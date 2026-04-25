@@ -1,0 +1,14 @@
+
+======================================================================
+  EXPERIMENT 2 — Computational Efficiency
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: soc-Epinions1
+[soc-Epinions1] 75879 nodes, 508837 edges
+  [Seed] S=75874, N=0, I=5, R=0
+  Running SG-SNIR (instrumented)...
+  Running MaxExpectedH...
+  ✓ SG-SNIR total evals: 601
+  ✓ MaxExpH total evals: 790
+  ✓ Saved → results/experiment2/soc-Epinions1_efficiency.json

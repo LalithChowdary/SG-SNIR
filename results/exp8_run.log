@@ -1,0 +1,146 @@
+
+======================================================================
+  EXPERIMENT 8 — Robustness to Seed Selection
+======================================================================
+
+────────────────────────────────────────────────────────────
+  Dataset: HIV
+[HIV] 35228 nodes, 49779 edges
+
+  Seed size = 1 (10 trials)
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+  [Seed] S=35227, N=0, I=1, R=0
+    SG-SNIR  mean=4.2543  std=1.3989
+
+  Seed size = 3 (10 trials)
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+  [Seed] S=35225, N=0, I=3, R=0
+    SG-SNIR  mean=15.4448  std=4.2263
+
+  Seed size = 5 (10 trials)
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+  [Seed] S=35223, N=0, I=5, R=0
+    SG-SNIR  mean=39.2116  std=26.6817
+
+  Seed size = 10 (10 trials)
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+  [Seed] S=35218, N=0, I=10, R=0
+    SG-SNIR  mean=81.2395  std=27.8482
+
+  Seed size = 20 (10 trials)
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+  [Seed] S=35208, N=0, I=20, R=0
+    SG-SNIR  mean=169.1654  std=36.9084
+
+  ✓ Saved → results/experiment8/HIV_robustness.json
+
+────────────────────────────────────────────────────────────
+  Dataset: p2p-Gnutella
+[p2p-Gnutella] 6301 nodes, 20777 edges
+
+  Seed size = 1 (10 trials)
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+  [Seed] S=6300, N=0, I=1, R=0
+    SG-SNIR  mean=3.1251  std=0.0000
+
+  Seed size = 3 (10 trials)
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+  [Seed] S=6298, N=0, I=3, R=0
+    SG-SNIR  mean=13.3672  std=0.6042
+
+  Seed size = 5 (10 trials)
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+  [Seed] S=6296, N=0, I=5, R=0
+    SG-SNIR  mean=24.1245  std=2.3260
+
+  Seed size = 10 (10 trials)
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+  [Seed] S=6291, N=0, I=10, R=0
+    SG-SNIR  mean=50.0446  std=2.9527
+
+  Seed size = 20 (10 trials)
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+  [Seed] S=6281, N=0, I=20, R=0
+    SG-SNIR  mean=102.4018  std=3.4217
+
+  ✓ Saved → results/experiment8/p2p-Gnutella_robustness.json

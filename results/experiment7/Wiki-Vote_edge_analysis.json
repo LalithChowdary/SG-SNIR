@@ -1,0 +1,170 @@
+{
+  "dataset": "Wiki-Vote",
+  "k": 20,
+  "SG-SNIR": {
+    "time_s": 16.171,
+    "selected_edges": [
+      {
+        "u": 8213,
+        "v": 1982,
+        "category": "bridge",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 6731,
+        "v": 6665,
+        "category": "bridge",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1498,
+        "v": 3456,
+        "category": "internal",
+        "spectral_drop": 0.004091
+      },
+      {
+        "u": 1498,
+        "v": 1167,
+        "category": "internal",
+        "spectral_drop": 0.001962
+      },
+      {
+        "u": 1498,
+        "v": 762,
+        "category": "internal",
+        "spectral_drop": 0.000214
+      },
+      {
+        "u": 1498,
+        "v": 3238,
+        "category": "internal",
+        "spectral_drop": 3.6e-05
+      },
+      {
+        "u": 1689,
+        "v": 1031,
+        "category": "internal",
+        "spectral_drop": -0.000648
+      },
+      {
+        "u": 1498,
+        "v": 4191,
+        "category": "internal",
+        "spectral_drop": -0.000116
+      },
+      {
+        "u": 1690,
+        "v": 1692,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1498,
+        "v": 7651,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1689,
+        "v": 1787,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1690,
+        "v": 2877,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      }
+    ],
+    "category_fractions": {
+      "internal": 0.5,
+      "bridge": 0.1667,
+      "peripheral": 0.3333
+    },
+    "H_final": 15.625697866663424
+  },
+  "MaxExpectedH": {
+    "time_s": 41.354,
+    "selected_edges": [
+      {
+        "u": 1498,
+        "v": 3456,
+        "category": "internal",
+        "spectral_drop": 0.004091
+      },
+      {
+        "u": 1498,
+        "v": 1167,
+        "category": "internal",
+        "spectral_drop": 0.001962
+      },
+      {
+        "u": 1498,
+        "v": 762,
+        "category": "internal",
+        "spectral_drop": 0.000214
+      },
+      {
+        "u": 8213,
+        "v": 1982,
+        "category": "bridge",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 6731,
+        "v": 6665,
+        "category": "bridge",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1498,
+        "v": 3238,
+        "category": "internal",
+        "spectral_drop": 3.6e-05
+      },
+      {
+        "u": 1689,
+        "v": 1031,
+        "category": "internal",
+        "spectral_drop": -0.000648
+      },
+      {
+        "u": 1498,
+        "v": 4191,
+        "category": "internal",
+        "spectral_drop": -0.000116
+      },
+      {
+        "u": 1690,
+        "v": 1692,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1498,
+        "v": 7651,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1689,
+        "v": 1787,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      },
+      {
+        "u": 1690,
+        "v": 2877,
+        "category": "peripheral",
+        "spectral_drop": 0.0
+      }
+    ],
+    "category_fractions": {
+      "internal": 0.5,
+      "bridge": 0.1667,
+      "peripheral": 0.3333
+    },
+    "H_final": 15.625697866663424
+  }
+}

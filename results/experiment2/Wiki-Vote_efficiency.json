@@ -1,0 +1,147 @@
+{
+  "dataset": "Wiki-Vote",
+  "k": 20,
+  "sg_snir_log": [
+    {
+      "iteration": 0,
+      "gamma_W_size": 12,
+      "gamma_prime_size": 8,
+      "C_size": 2,
+      "eval_count": 2,
+      "wall_time_s": 0.6983,
+      "H_after": 16.598368
+    },
+    {
+      "iteration": 1,
+      "gamma_W_size": 11,
+      "gamma_prime_size": 7,
+      "C_size": 1,
+      "eval_count": 1,
+      "wall_time_s": 0.3575,
+      "H_after": 16.529245
+    },
+    {
+      "iteration": 2,
+      "gamma_W_size": 10,
+      "gamma_prime_size": 6,
+      "C_size": 6,
+      "eval_count": 6,
+      "wall_time_s": 1.969,
+      "H_after": 16.278942
+    },
+    {
+      "iteration": 3,
+      "gamma_W_size": 9,
+      "gamma_prime_size": 5,
+      "C_size": 5,
+      "eval_count": 5,
+      "wall_time_s": 1.6196,
+      "H_after": 16.103013
+    },
+    {
+      "iteration": 4,
+      "gamma_W_size": 8,
+      "gamma_prime_size": 4,
+      "C_size": 4,
+      "eval_count": 4,
+      "wall_time_s": 1.2708,
+      "H_after": 16.015401
+    },
+    {
+      "iteration": 5,
+      "gamma_W_size": 7,
+      "gamma_prime_size": 3,
+      "C_size": 3,
+      "eval_count": 3,
+      "wall_time_s": 0.9444,
+      "H_after": 15.946387
+    },
+    {
+      "iteration": 6,
+      "gamma_W_size": 6,
+      "gamma_prime_size": 2,
+      "C_size": 2,
+      "eval_count": 2,
+      "wall_time_s": 0.6271,
+      "H_after": 15.879857
+    },
+    {
+      "iteration": 7,
+      "gamma_W_size": 5,
+      "gamma_prime_size": 1,
+      "C_size": 1,
+      "eval_count": 1,
+      "wall_time_s": 0.072,
+      "H_after": 15.816591
+    },
+    {
+      "iteration": 8,
+      "gamma_W_size": 4,
+      "gamma_prime_size": 0,
+      "C_size": 4,
+      "eval_count": 4,
+      "wall_time_s": 0.1167,
+      "H_after": 15.76766
+    },
+    {
+      "iteration": 9,
+      "gamma_W_size": 3,
+      "gamma_prime_size": 0,
+      "C_size": 3,
+      "eval_count": 3,
+      "wall_time_s": 0.0971,
+      "H_after": 15.72034
+    },
+    {
+      "iteration": 10,
+      "gamma_W_size": 2,
+      "gamma_prime_size": 0,
+      "C_size": 2,
+      "eval_count": 2,
+      "wall_time_s": 0.0913,
+      "H_after": 15.673019
+    },
+    {
+      "iteration": 11,
+      "gamma_W_size": 1,
+      "gamma_prime_size": 0,
+      "C_size": 1,
+      "eval_count": 1,
+      "wall_time_s": 0.0527,
+      "H_after": 15.625698
+    }
+  ],
+  "max_expected_h_log": {
+    "extrapolated": false,
+    "H_history": [
+      16.418450136864674,
+      16.242523003709742,
+      16.15491150435023,
+      16.08452854851443,
+      16.015400616894794,
+      15.946387434452019,
+      15.879856766266162,
+      15.816590631177315,
+      15.767660492995713,
+      15.72033961755162,
+      15.673018742107521,
+      15.625697866663424
+    ],
+    "eval_counts": [
+      12,
+      11,
+      10,
+      9,
+      8,
+      7,
+      6,
+      5,
+      4,
+      3,
+      2,
+      1
+    ],
+    "total_time_s": 23.023
+  },
+  "meh_extrapolated": false
+}
