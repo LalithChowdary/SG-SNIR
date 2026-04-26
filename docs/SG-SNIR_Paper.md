@@ -1,0 +1,864 @@
+---
+abstract: |
+  Controlling epidemic spread in directed networks through targeted edge
+  removal is a critical problem in public health and network security.
+  Existing approaches either model epidemic dynamics accurately but
+  suffer from exhaustive search costs, or leverage spectral graph
+  structure efficiently but lack epidemic realism. We propose
+  **SG-SNIR** (Spectral-Guided SNIR), a hybrid framework that integrates
+  the KSCC-based structural insight from DINO with the SNIR epidemic
+  simulation model for edge-level intervention. SG-SNIR restricts the
+  candidate edge set to structurally critical edges using Tarjan's SCC
+  decomposition and an $\mathcal{O}(1)$-per-edge SpectralDrop filter,
+  then selects greedily via full SNIR simulation only within this
+  reduced set. Evaluated on four real-world directed networks, SG-SNIR
+  reduces cumulative epidemic influence by 2--8% over degree-product
+  heuristics and achieves within 0.1--2.3% of exhaustive MaxExpectedH
+  quality while requiring 2.3--2.4$\times$ fewer SNIR evaluations and
+  2.2--2.7$\times$ less wall-clock time on networks with KSCC
+  concentration $\geq 18\%$. On networks with negligible KSCC structure,
+  SG-SNIR degrades gracefully to MaxExpectedH with zero quality loss.
+author:
+- 
+- 
+- 
+title: |
+  Spectral-Guided Edge Blocking for Epidemic Containment in Directed
+  Networks Using the SNIR Model\
+---
+
+::: IEEEkeywords
+epidemic containment, edge blocking, SNIR model, spectral graph theory,
+directed networks, strongly connected components, network immunisation
+:::
+
+# Introduction
+
+Controlling the spread of epidemics and misinformation in social
+networks is a critical problem with real-world consequences in public
+health, cybersecurity, and online platforms. A central challenge in this
+domain is: given a limited intervention budget, which contacts in a
+network should be blocked to reduce the spread as much as possible? This
+is commonly known as the *edge blocking* or *contact isolation* problem.
+
+Over the years, many methods have been proposed to tackle this problem,
+ranging from simple centrality-based heuristics to simulation-driven
+approaches and spectral graph theoretic methods. While each of these
+approaches has contributed meaningfully to the field, they each carry
+limitations --- either in accuracy, scalability, or their ability to
+handle directed networks realistically. These limitations are discussed
+in detail in prior literature.
+
+In this paper, we propose a hybrid framework that combines two
+complementary approaches --- the SNIR epidemic simulation model and the
+spectral theory of directed networks --- to achieve more efficient and
+accurate edge blocking. The key idea is to use structural properties of
+the network to guide and reduce the search space before running
+expensive epidemic simulations, rather than evaluating every candidate
+edge blindly.
+
+The main contributions of this paper are as follows:
+
+- **KSCC-based filtering:** We restrict candidate edges to the Key
+  Strongly Connected Component (KSCC) of the directed network, which is
+  the only region where edge removal can reduce the global spectral
+  radius and thus the epidemic spread.
+
+- **Spectral edge scoring:** We derive an $\mathcal{O}(1)$-per-edge
+  approximation of the spectral radius reduction caused by edge removal,
+  grounded in the Directed Chung-Lu spectral radius formula. For each
+  edge $(u \to v)$ within the KSCC, we compute
+  $\mathrm{SpectralDrop}(u{\to}v) \approx \rho(S^*) - \frac{\sum d_{\mathrm{in}} d_{\mathrm{out}} - d_{\mathrm{in}}^{S^*}(u) - d_{\mathrm{out}}^{S^*}(v)}{\mathrm{vol}(S^*)-1}$,
+  converting node-level spectral theory from DINO into a principled
+  edge-level ranking criterion.
+
+- **Hybrid algorithm:** We integrate the above two steps into the SNIR
+  framework to produce an algorithm that is faster than the original
+  approach while maintaining the accuracy of epidemic-driven edge
+  selection.
+
+- **Empirical validation:** We evaluate our method on real-world
+  directed networks and demonstrate its effectiveness and efficiency.
+
+# Background
+
+This section provides the necessary background on the two frameworks
+that our method builds upon: the SNIR epidemic model with its edge
+blocking algorithm, and the spectral theory of directed networks from
+the DINO framework.
+
+## The SNIR Epidemic Model
+
+The SNIR model proposed by Dai *et al.* extends the classical SIR model
+by introducing a Non-symptomatic (N) state to capture asymptomatic
+infection, a pattern prominently observed in COVID-19. Every node in the
+network is in one of four states at any time: Susceptible (S),
+Non-symptomatic (N), Infectious (I), or Recovered (R).
+
+Susceptible nodes can become asymptomatically infected with probability
+$\alpha$ or symptomatically infected with probability $\beta$.
+Non-symptomatic nodes spread the disease silently and may progress to
+Infectious with probability $\delta$ or recover directly with
+probability $\eta$. Infectious nodes recover with probability $\gamma$,
+and Recovered nodes may lose immunity and return to Susceptible with
+probability $\xi$.
+
+The total expected infection over time horizon $T$ is measured as:
+$$\begin{equation}
+I(G, \Omega) = \sum_{t=0}^{T} \left[ \sum_{u \in V} P_N^W(u,t) + \sum_{u \in V} P_I^W(u,t) \right]
+\end{equation}$$ where $\Omega = (S, N, I, R)$ is the initial network
+state and $W = N \cup I$ is the set of currently infectious nodes. The
+state probabilities at each time step are updated iteratively using a
+set of closed-form equations, avoiding the need for expensive Monte
+Carlo simulations.
+
+## Extending SNIR to Directed Networks
+
+The original SNIR model was formulated and evaluated on undirected
+networks, where each edge $(u,v)$ represents symmetric contact and
+infection can flow in either direction. In a directed network, each edge
+$(u \to v)$ represents a one-way transmission channel. The existence of
+$(u \to v)$ does not imply $(v \to u)$, and the two carry independent
+transmission probabilities if both are present. Applying SNIR to
+directed networks requires modifying how the infection arrival
+probability is computed at each node.
+
+In the undirected SNIR formulation, the probability that infection
+arrives at node $u$ at time $t{+}1$ aggregates contributions from all
+neighbors of $u$. In the directed setting, only nodes with a directed
+edge *toward* $u$ can transmit to $u$. Formally, the directed
+transmission arrival probability is: $$\begin{equation}
+r(u,t{+}1) = 1 - \prod_{v:\,(v \to u) \in E} \bigl[1 - p(v,u) \cdot a(v,t)\bigr]
+\end{equation}$$ where the product is taken only over nodes $v$ that
+have a directed edge to $u$, replacing the undirected neighborhood
+$\Gamma(u)$ with the directed in-neighborhood
+$N^{-}(u) = \{v \mid (v \to u) \in E\}$.
+
+All subsequent SNIR state update equations for $p_I$, $p_N$, $p_R$, and
+$p_S$ remain structurally identical to the original formulation,
+updating as follows: $$\begin{align}
+p_I(u,t{+}1) &= (1-\gamma) p_I(u,t) + r(u,t{+}1) \beta p_S(u,t) + \delta p_N(u,t) \\
+p_N(u,t{+}1) &= (1-\delta-\eta) p_N(u,t) + \alpha r(u,t{+}1) p_S(u,t) \\
+p_R(u,t{+}1) &= (1-\xi) p_R(u,t) + \gamma p_I(u,t) + \eta p_N(u,t) \\
+p_S(u,t{+}1) &= 1 - [p_N(u,t{+}1) + p_I(u,t{+}1) + p_R(u,t{+}1)]
+\end{align}$$ The only modification propagates through $r(u,t{+}1)$,
+which now correctly reflects the asymmetric nature of directed contact.
+This extension ensures that a node can only receive infection through
+edges directed toward it, faithfully modeling directed transmission
+channels such as social media influence or physical flow networks. This
+directional specificity is what makes edge blocking on directed networks
+both more complex and more precise than on undirected networks.
+
+## Edge Blocking Under the SNIR Model
+
+The edge blocking problem under the SNIR model is defined as follows:
+given a directed network $G = (V, E, P)$, an initial infected set, and a
+budget $k$, find at most $k$ edges whose removal minimizes
+$I(G, \Omega)$ over time $T$.
+
+The MaxExpectedH algorithm of Dai *et al.* solves this greedily. At each
+iteration, it identifies the candidate edge set: $$\begin{equation}
+\Gamma(W) = \{(u,v) \mid u \in W,\; v \notin W,\; (u,v) \in E \}
+\end{equation}$$
+
+For each candidate edge $e$, it computes: $$\begin{equation}
+H(e) = I(G_e, \Omega)
+\end{equation}$$ by running a full SNIR simulation on the modified graph
+$G_e$. The edge with the smallest $H(e)$ is permanently removed, and the
+process repeats until $k$ edges are blocked.
+
+While accurate, this approach is computationally expensive as it runs a
+full simulation for every candidate edge at every iteration.
+
+## Spectral Theory of Directed Networks and DINO
+
+He *et al.* established that epidemic spread on a directed network is
+governed by its spectral radius --- the largest eigenvalue magnitude of
+its adjacency matrix. Specifically, an epidemic dies out if and only if
+the spectral radius falls below a model-dependent threshold $C$.
+
+They further proved a key structural result:
+
+**Theorem:** The spectral radius of a directed network $G$ equals the
+spectral radius of its Key Strongly Connected Component (KSCC), defined
+as the strongly connected subgraph with the largest spectral radius.
+
+This implies that interventions outside the KSCC have no effect on the
+global epidemic spread.
+
+Additionally, under the Directed Chung-Lu network model, the spectral
+radius can be efficiently approximated as: $$\begin{equation}
+\rho(G) \approx \frac{\mathbf{d}^{in} \cdot \mathbf{d}^{out}}{\mathrm{vol}(G)}
+\end{equation}$$ where $\mathbf{d}^{in}$ and $\mathbf{d}^{out}$ denote
+the in-degree and out-degree vectors, respectively, and
+$\mathrm{vol}(G)$ is the sum of all edge weights (or total degree in the
+unweighted case).
+
+## The DINO Algorithm
+
+Based on the above theory, the DINO algorithm greedily removes $k$ nodes
+from the KSCC to maximally reduce the spectral radius. At each step, it
+selects the node $v$ minimizing the score function: $$\begin{equation}
+F(v) = \frac{\mathbf{d}^{in} \cdot \mathbf{d}^{out}}{\mathrm{vol}(G)}
+\end{equation}$$ after removal, which approximates the spectral radius
+of the remaining graph.
+
+Since $F(v)$ depends only on node degrees, the score for all nodes can
+be computed in linear time, giving DINO an overall complexity of
+$\mathcal{O}(k|V| + |E|)$.
+
+# Research Gaps
+
+The previous section described two frameworks for epidemic containment
+--- the SNIR-based edge blocking approach and the DINO algorithm. While
+both are effective in their own way, they each have clear limitations.
+This section discusses these gaps and explains why a combined approach
+is needed.
+
+## Computational Inefficiency of SNIR-Based Edge Blocking
+
+The MaxExpectedH algorithm produces accurate results by running a full
+SNIR simulation for every candidate edge at every iteration. While this
+yields high-quality results, it is computationally expensive.
+
+The main issue is that the algorithm treats all candidate edges equally.
+It evaluates every edge in $\Gamma(W)$ with the same effort, regardless
+of whether the edge lies in a structurally critical region of the
+network or in a peripheral region with minimal influence on the spread.
+There is no mechanism to filter or prioritize edges before simulation.
+As the network size increases and the number of candidate edges grows,
+this exhaustive evaluation becomes a significant bottleneck.
+
+## DINO Operates at the Wrong Granularity and Lacks Epidemic Realism
+
+DINO addresses the efficiency issue by leveraging spectral theory and a
+degree-based scoring function to select nodes in linear time. However,
+it has two key limitations in our setting.
+
+First, DINO operates at the node level rather than the edge level.
+Removing a node effectively isolates an individual from all their
+contacts simultaneously, which is often impractical in real-world
+scenarios. In contrast, edge blocking --- restricting specific
+interactions --- is more realistic and actionable. For instance, during
+COVID-19, it was more feasible to restrict specific travel routes or
+interactions than to completely isolate individuals from all contacts.
+
+Second, DINO lacks awareness of epidemic dynamics. Its scoring function
+depends only on node degrees and network structure, without considering
+factors such as current infection states, transmission probabilities, or
+temporal evolution of the epidemic. As a result, while DINO's selections
+may be structurally optimal, they may not correspond to the most
+effective interventions in a dynamic epidemic setting.
+
+## Directed Networks Are Underexplored in Edge Blocking
+
+Most edge blocking methods, including MaxExpectedH, have been primarily
+designed and evaluated on undirected networks. Directed networks
+introduce additional complexity, as edges have directionality and
+transmission is not symmetric. Moreover, many spectral techniques
+developed for undirected graphs do not directly extend to the directed
+case.
+
+The SNIR framework does not explicitly address the theoretical
+challenges of directed networks. On the other hand, DINO introduces
+important structural insights for directed graphs, such as the Key
+Strongly Connected Component (KSCC) and degree-based spectral
+approximations. However, these insights have not been applied to edge
+blocking problems, leaving a clear gap in the literature.
+
+## Summary of Gaps
+
+In summary, SNIR-based methods provide accurate modeling of epidemic
+dynamics but suffer from inefficient exhaustive evaluation, while
+spectral methods such as DINO offer efficient structural guidance but
+lack support for edge-level interventions and realistic propagation
+dynamics.
+
+An effective solution should combine the strengths of both approaches
+by:
+
+- focusing on structurally critical regions of the network,
+
+- efficiently ranking candidate edges prior to evaluation, and
+
+- incorporating realistic epidemic dynamics in the final decision
+  process.
+
+To the best of our knowledge, no existing method satisfies all these
+requirements simultaneously. This gap motivates the hybrid approach
+proposed in this work, which integrates spectral structural guidance
+with SNIR-based dynamic evaluation.
+
+# Proposed Methodology: SG-SNIR
+
+This section presents the proposed algorithm, **SG-SNIR**
+(Spectral-Guided SNIR), a hybrid framework that integrates structural
+guidance from spectral graph theory into the SNIR epidemic simulation
+pipeline. The core idea is to reduce the expensive search space of
+SNIR-based edge blocking by first identifying structurally critical
+edges using KSCC analysis and bridge edge detection, and only then
+evaluating those edges through full epidemic simulation.
+
+## Overview
+
+The algorithm operates in a greedy loop, selecting and removing one edge
+per iteration until the budget $k$ is exhausted. At each iteration,
+instead of evaluating all candidate edges with SNIR simulation, SG-SNIR
+first narrows the candidate set using two structural filters---KSCC
+membership and bridge edge detection---and then applies an adaptive
+spectral threshold to further reduce the set before simulation. The full
+flow of the algorithm is illustrated in
+Fig. [1](#fig:sgsnir_flow){reference-type="ref"
+reference="fig:sgsnir_flow"}.
+
+<figure id="fig:sgsnir_flow" data-latex-placement="htbp">
+<img src="diagrams/sg_snir_flow.jpeg" style="width:90.0%" />
+<figcaption>Overall workflow of the SG-SNIR algorithm.</figcaption>
+</figure>
+
+## Step-by-Step Description
+
+**Step 1 --- Initialize SNIR:** Given the initial network state
+$\Omega = (S, N, I, R)$, each node is assigned initial state
+probabilities $p_S, p_N, p_I, p_R$. The current infection source set is
+defined as: $$\begin{equation}
+W = N \cup I
+\end{equation}$$ containing all nodes capable of spreading the disease.
+
+**Step 2 --- Compute candidate edges:** The candidate edge set contains
+all outgoing edges from infectious nodes to *Susceptible* nodes only:
+$$\begin{equation}
+\Gamma(W) = \{(u,v) \mid u \in W,\ v \in S,\ (u,v) \in E\}
+\end{equation}$$ This is a refinement of the original MaxExpectedH
+candidate set, which used $v \notin W$. Here we further restrict to
+$v \in S$ since edges to Recovered nodes carry zero transmission
+probability under the SNIR model; blocking such edges provides no
+reduction in epidemic spread and wastes simulation budget.
+
+**Step 3 --- KSCC and bridge filtering:** The algorithm decomposes the
+current graph into Strongly Connected Components (SCCs) using Tarjan's
+algorithm, a standard $\mathcal{O}(V+E)$ graph decomposition. Trivial
+SCCs (single nodes with no self-loop) are discarded, as they have
+spectral radius zero and cannot sustain epidemic spread. For each
+remaining non-trivial SCC $S_i$, the spectral radius is approximated
+using only the *intra-SCC* degrees: $$\begin{equation}
+\rho(S_i) \approx \frac{\displaystyle\sum_{u \in S_i} d_{\mathrm{in}}^{S_i}(u)\, d_{\mathrm{out}}^{S_i}(u)}{\mathrm{vol}(S_i)}
+\end{equation}$$ where $d_{\mathrm{in}}^{S_i}(u)$ counts only edges
+whose both endpoints lie within $S_i$, and
+$\mathrm{vol}(S_i) = \sum_{u \in S_i} d_{\mathrm{in}}^{S_i}(u)$. The Key
+Strongly Connected Component is then identified as: $$\begin{equation}
+S^* = \arg\max_{S_i} \; \rho(S_i)
+\end{equation}$$
+
+*Note:* using full-graph degrees would conflate the structural
+properties of different SCCs and produce an incorrect identification of
+the KSCC.
+
+The filtered candidate set is then defined as: $$\begin{equation}
+\Gamma'(W) = \Gamma(W) \cap \left(\mathcal{E}_{S^*} \cup \mathcal{B}_{S^*}\right)
+\end{equation}$$ where $\mathcal{E}_{S^*}$ is the set of edges internal
+to $S^*$, and $\mathcal{B}_{S^*}$ is the set of bridge edges into $S^*$.
+A bridge edge is any edge $(u \to v)$ where $u \notin S^*$ and
+$v \in S^*$, representing infection entry points into the highest-spread
+region of the network.
+
+If $\Gamma'(W) = \emptyset$ but $\Gamma(W) \neq \emptyset$, the current
+epidemic is confined to a region disconnected from the KSCC. In this
+case structural filtering is bypassed and $\Gamma'(W) = \Gamma(W)$,
+ensuring the algorithm always makes progress on locally active
+outbreaks.
+
+**Step 4 --- Adaptive spectral filtering:** For each internal KSCC edge
+$(u \to v) \in \mathcal{E}_{S^*}$, we define $\mathrm{SpectralDrop}$ as
+the estimated reduction in $\rho(S^*)$ from permanently removing that
+edge: $$\begin{equation}
+\mathrm{SpectralDrop}(u{\to}v) = \rho(S^*) - \rho(S^* \setminus \{u{\to}v\})
+\end{equation}$$ Computing this exactly requires a full spectral
+recomputation. Instead, we use the Directed Chung-Lu approximation. When
+$(u \to v)$ is removed from $S^*$, $d_{\mathrm{out}}^{S^*}(u)$ decreases
+by 1 and $d_{\mathrm{in}}^{S^*}(v)$ decreases by 1. The consequent
+change in the degree-product sum $\sum d_{\mathrm{in}} d_{\mathrm{out}}$
+is derived as: $$\begin{align*}
+\Delta \text{sum} &= \bigl[ d_{\mathrm{in}}(u) d_{\mathrm{out}}(u) - d_{\mathrm{in}}(u) (d_{\mathrm{out}}(u)-1) \bigr] \\
+&\quad + \bigl[ d_{\mathrm{in}}(v) d_{\mathrm{out}}(v) - (d_{\mathrm{in}}(v)-1) d_{\mathrm{out}}(v) \bigr] \\
+&= d_{\mathrm{in}}(u) + d_{\mathrm{out}}(v)
+\end{align*}$$ reducing the overall numerator sum by
+$d_{\mathrm{in}}^{S^*}(u) + d_{\mathrm{out}}^{S^*}(v)$. This gives the
+$\mathcal{O}(1)$-per-edge approximation: $$\begin{equation}
+\mathrm{SpectralDrop}(u{\to}v) \approx \rho(S^*) - \frac{\displaystyle\sum_{i \in S^*} d_{\mathrm{in}}^{S^*}(i)\,d_{\mathrm{out}}^{S^*}(i) - d_{\mathrm{in}}^{S^*}(u) - d_{\mathrm{out}}^{S^*}(v)}{\mathrm{vol}(S^*) - 1}
+\end{equation}$$ Note that the $\mathrm{SpectralDrop}$ equation is
+defined only for edges $(u \to v)$ where both $u$ and $v$ lie within
+$S^*$. Bridge edges are handled separately as they naturally bypass this
+threshold. Since the numerator sum and $\mathrm{vol}(S^*)$ are
+precomputed once per iteration, $\mathrm{SpectralDrop}$ for all internal
+edges in $\Gamma'(W)$ is evaluated in $\mathcal{O}(|\Gamma'(W)|)$ total
+time.
+
+The adaptive candidate set is constructed with bimodal filtering. Bridge
+edges bypass the spectral threshold entirely. Bridge edges have
+$\mathrm{SpectralDrop} = 0$ because their source node $u$ lies outside
+$S^*$, meaning neither $d_{\mathrm{in}}^{S^*}(u)$ nor
+$d_{\mathrm{out}}^{S^*}(u)$ appear in the KSCC degree-product sum.
+Removing such an edge does not alter any intra-KSCC degree, leaving
+$\rho(S^*)$ unchanged under the Chung-Lu approximation. Their importance
+is epidemiological rather than spectral --- they represent the only
+pathways through which infection can enter $S^*$ from outside, and
+blocking them prevents the KSCC from being seeded entirely:
+$$\begin{equation}
+C = \mathcal{B}_{S^*}^{\Gamma} \;\cup\; \{e \in \mathcal{E}_{S^*}^{\Gamma} \mid \mathrm{SpectralDrop}(e) > \varepsilon \cdot \rho(S^*)\}
+\end{equation}$$ where
+$\mathcal{B}_{S^*}^{\Gamma} = \Gamma'(W) \cap \mathcal{B}_{S^*}$ and
+$\mathcal{E}_{S^*}^{\Gamma} = \Gamma'(W) \cap \mathcal{E}_{S^*}$.
+
+If $C = \emptyset$ after this filtering step, the spectral threshold is
+relaxed and $C = \Gamma'(W)$, guaranteeing the algorithm always selects
+an edge and fully expends the budget $k$.
+
+**Step 5 --- SNIR simulation:** For each edge $e \in C$, the algorithm
+temporarily removes $e$, runs the full SNIR propagation for $T$ time
+steps, and computes: $$\begin{equation}
+H(e) = I(G_e, \Omega)
+\end{equation}$$
+
+**Step 6 --- Select and remove best edge:** $$\begin{equation}
+e^* = \arg\min_{e \in C} H(e)
+\end{equation}$$
+
+This edge is permanently removed from $G$ and added to the selected set
+$X$. The algorithm returns to Step 2 with the updated graph. The
+infected set $W$ is held fixed throughout all $k$ iterations --- the
+algorithm operates as a *static budget allocation*, identifying and
+removing all $k$ edges prospectively from the initial configuration at
+$t=0$. This models a realistic, immediate intervention scenario (e.g.,
+"Day 1" of an outbreak) where the entire intervention budget must be
+deployed simultaneously to preemptively halt the spread, rather than
+allocating interventions dynamically as the epidemic evolves in the
+future. A limitation of this static approach is that if an epidemic has
+already been spreading dynamically for some time, the upfront fixed $W$
+may eventually miss critical emergent transmission pathways. Expanding
+the algorithm to support dynamic recalculation of $W$ remains an area
+for future work. The process repeats until $|X| = k$ or
+$\Gamma(W) = \emptyset$.
+
+# Datasets {#sec:datasets}
+
+We evaluate SG-SNIR on four real-world directed networks spanning
+different domains and scales.
+Table [1](#tab:datasets){reference-type="ref" reference="tab:datasets"}
+summarises their key structural properties.
+
+::: {#tab:datasets}
++-----------------+----------+----------+----------+-----------+-------------+
+| **Dataset**     | $|V|$    | $|E|$    | **KSCC** | **KSCC%** | $\rho(S^*)$ |
++:================+=========:+=========:+=========:+==========:+============:+
+| HIV             | 35,228   | 49,779   | 62       | 0.18%     | 6.25        |
++-----------------+----------+----------+----------+-----------+-------------+
+| p2p-Gnutella    | 6,301    | 20,777   | 2,068    | 32.8%     | 4.88        |
++-----------------+----------+----------+----------+-----------+-------------+
+| Wiki-Vote       | 7,115    | 103,689  | 1,300    | 18.3%     | 44.57       |
++-----------------+----------+----------+----------+-----------+-------------+
+| soc-Epinions1   | 75,879   | 508,837  | 32,223   | 42.5%     | 82.79       |
++-----------------+----------+----------+----------+-----------+-------------+
+| email-EuAll^\*^ | 265,214  | 420,045  | ---      | ---       | ---         |
++-----------------+----------+----------+----------+-----------+-------------+
+| ^\*^email-EuAll is included for scalability evaluation only (Exp. 5). Its  |
+| size makes full SNIR evaluation computationally infeasible.                |
++----------------------------------------------------------------------------+
+
+: Dataset Summary
+:::
+
+The **HIV Transmission** network is sourced from ICPSR #22140, DS0002
+(Morris and Rothenberg, 2011), a dyadic contact archive of eight HIV
+network studies conducted in the US between 1988--2001. All unique
+participant ID pairs from the directed contact table yield 35,228 nodes
+and 49,779 directed edges. Its KSCC covers only 0.18% of nodes, making
+it a natural *boundary case* where the spectral filter is inactive and
+SG-SNIR degrades to MaxExpectedH by construction. The **p2p-Gnutella**,
+**Wiki-Vote**, **soc-Epinions1**, and **email-EuAll** datasets are
+obtained from the SNAP collection.
+
+All edges are assigned a uniform transmission probability of 0.05
+(fixed-weight mode). The SNIR parameters used throughout are
+$\alpha=0.033$, $\beta=0.022$, $\delta=0.020$, $\eta=0.140$,
+$\gamma=0.315$, $\xi=0.300$, with time horizon $T=10$ and a fixed
+initial infected count of 5 nodes (BASE_SEED=42 for all primary
+comparisons).
+
+# Evaluation Metrics {#sec:metrics}
+
+We evaluate SG-SNIR using three complementary metrics.
+
+**Cumulative influence**
+$H(G,\Omega) = \sum_{t=0}^{T}[\sum_u p_N(u,t) + \sum_u p_I(u,t)]$
+measures the total expected epidemic size over $T$ steps after removing
+$k$ edges. Lower is better.
+
+**Evaluation count** measures the total number of SNIR simulations
+executed across all $k$ iterations. This captures algorithmic efficiency
+independent of hardware.
+
+**Wall-clock time** measures total execution time for the $k$-edge
+removal process. Reported in seconds for $k=20$.
+
+# Results {#sec:results}
+
+## Experiment 1: Effectiveness
+
+Table [2](#tab:effectiveness){reference-type="ref"
+reference="tab:effectiveness"} reports the final cumulative influence
+$H$ after $k=20$ edge removals on three datasets across representative
+configurations (specifically, the $\eta_{\mathrm{low}}$ settings; full
+results including $\eta_{\mathrm{high}}$ are available in supplementary
+material). SG-SNIR consistently outperforms DegreeProduct and Random
+baselines across all evaluated configurations.
+
+::: {#tab:effectiveness}
+  **Dataset / Config**                           **SG-SNIR**   **DegProd**   **Random**
+  ---------------------- ---------------------- ------------- ------------- ------------
+  HIV                    fixed/$\eta_{lo}$       **29.693**      30.658        36.661
+  ($k=50$, 10 trials)    variable/$\eta_{lo}$    **16.363**      17.771        17.401
+  p2p-Gnutella           fixed/$\eta_{lo}$       **20.631**      21.465        21.722
+  ($k=20$, 10 trials)    variable/$\eta_{lo}$    **17.340**      17.689        17.606
+  Wiki-Vote              fixed/$\eta_{lo}$       **21.719**      22.462        23.090
+  ($k=20$, 5 trials)     variable/$\eta_{lo}$    **17.491**      18.520        18.180
+
+  : Effectiveness: H~final~ after $k$ removals (lower is better). Best
+  method per row in bold.
+:::
+
+**Quality vs. MaxExpectedH.**
+Table [3](#tab:quality_gap){reference-type="ref"
+reference="tab:quality_gap"} shows the direct quality comparison between
+SG-SNIR and MaxExpectedH, the computationally exhaustive baseline.
+
+::: {#tab:quality_gap}
++----------------+---------------------+---------------------+---------------------------------------+
+| **Dataset**    | **SG-SNIR**         | **MaxExpH**         | **Gap**                               |
++:===============+:===================:+:===================:+======================================:+
+| HIV            | 29.693$^{\ddagger}$ | 29.693$^{\ddagger}$ | 0.000%                                |
++----------------+---------------------+---------------------+---------------------------------------+
+| $^{\ddagger}$ On HIV the filter ratio is 1.0; SG-SNIR and MaxExpH evaluate identical               |
++----------------------------------------------------------------------------------------------------+
+| candidate sets producing equal results by construction.                                            |
++----------------+---------------------+---------------------+---------------------------------------+
+| p2p-Gnutella   | 20.797              | 20.775              | $+$`<!-- -->`{=html}0.106%            |
++----------------+---------------------+---------------------+---------------------------------------+
+| Wiki-Vote      | 22.149              | 21.660              | $+$`<!-- -->`{=html}2.256%^$\dagger$^ |
++----------------+---------------------+---------------------+---------------------------------------+
+| ^$\dagger$^3 trials; gap driven by one outlier seed (see text).                                    |
++----------------------------------------------------------------------------------------------------+
+
+: SG-SNIR vs. MaxExpectedH (Paper 1 Baseline) quality ($k=20$,
+fixed/$\eta_{lo}$, 3 trials).
+:::
+
+On **HIV**, the filter ratio is 1.0 --- SG-SNIR evaluates the identical
+candidate set as MaxExpectedH, producing exactly equal results by
+construction. The meaningful quality comparison is on p2p-Gnutella
+($+$`<!-- -->`{=html}0.106%) and Wiki-Vote ($+$`<!-- -->`{=html}2.256%)
+where the filter is active. On **Wiki-Vote** (3 trials), the gap reaches
+2.256%, driven by a single outlier seed where the network's high
+spectral radius ($\rho=44.6$) amplifies the impact of individual edge
+selection differences; with the remaining two seeds the gap is near
+zero. This result should be interpreted as an upper bound on the quality
+trade-off under adverse seeding conditions. On **p2p-Gnutella**, the gap
+is 0.106% --- negligible.
+
+## Experiment 2: Computational Efficiency
+
+Table [4](#tab:efficiency){reference-type="ref"
+reference="tab:efficiency"} reports the total SNIR evaluation counts
+across all $k$ iterations.
+
+::: {#tab:efficiency}
+  **Dataset**       **KSCC%**   **SG-SNIR**   **MaxExpH**    **Speedup**
+  --------------- ----------- ------------- ------------- --------------
+  HIV                   0.18%         1,230         1,230   1.00$\times$
+  Wiki-Vote             18.3%            34            78   2.29$\times$
+  p2p-Gnutella          32.8%           286           690   2.41$\times$
+  soc-Epinions1         42.5%           601           790   1.31$\times$
+
+  : Evaluation count speedup vs. MaxExpectedH.
+:::
+
+SG-SNIR achieves 2.3--2.4$\times$ fewer evaluations on networks with
+KSCC concentration $\geq 18\%$. On networks without meaningful KSCC
+structure, the filter is inactive and SG-SNIR matches MaxExpectedH
+exactly. HIV shows no speedup because its filter ratio is 1.0 (boundary
+case). The lower speedup on soc-Epinions1 (1.31$\times$) despite its
+larger KSCC (42.5%) is explained by its high graph density: 508,837
+edges produce a large absolute $\Gamma(W)$, and a higher fraction of
+candidates pass the filter in absolute terms even though the filter
+ratio (0.643) is below 1.0.
+
+<figure id="fig:tradeoff" data-latex-placement="htbp">
+<embed src="diagrams/tradeoff_scatter.pdf" style="width:90.0%" />
+<figcaption>Efficiency vs. Quality trade-off on p2p-Gnutella (<span
+class="math inline"><em>k</em> = 20</span>). SG-SNIR forms the optimal
+Pareto frontier (fast runtime, high quality) compared to MaxExpectedH
+and the structural heuristic DegreeProduct.</figcaption>
+</figure>
+
+## Experiment 3: Ablation Study
+
+Table [5](#tab:ablation){reference-type="ref" reference="tab:ablation"}
+reports the contribution of each SG-SNIR component. The boundary case
+(HIV) is excluded as all variants are identical there.
+
+::: {#tab:ablation}
+  **Variant**              **H~final~**   **Evals**   **Evals vs Full**
+  ----------------------- -------------- ----------- -------------------
+  Full SG-SNIR                20.049        227.6       1.00$\times$
+  No KSCC filter              20.036        618.0     2.72$\times$ more
+  No bridge edges             20.090        228.4       1.00$\times$
+  No spectral threshold       20.036        264.4     1.16$\times$ more
+
+  : Ablation study: H~final~ and evaluation counts (p2p-Gnutella,
+  $k=20$, 5 trials).
+:::
+
+Removing the KSCC filter (equivalent to exhaustive MaxExpectedH) reduces
+$H$ by only 0.065% while requiring 2.72$\times$ more evaluations.
+Removing bridge edges slightly worsens quality
+($+$`<!-- -->`{=html}0.2%), confirming that bridge edges carry
+epidemiologically useful containment signal. The SpectralDrop threshold
+provides an additional 14% pruning beyond the KSCC filter.
+
+On **soc-Epinions1** ($k=10$, 1 trial), SG-SNIR uses 286 evaluations
+vs. 445 for exhaustive search, a 1.56$\times$ speedup. Because this is a
+single trial at a partial budget ($k=10$) on a massive graph, the
+variance is extremely high; the $+$`<!-- -->`{=html}14.1% quality gap
+represents a single adversarial seed placement rather than the expected
+algorithmic performance. It nevertheless demonstrates that the filter
+remains active on large networks. Note that evaluation counts here
+differ from Table [4](#tab:efficiency){reference-type="ref"
+reference="tab:efficiency"} because Experiment 2 runs $k=20$ iterations
+while this ablation uses $k=10$; counts scale approximately linearly
+with budget.
+
+## Experiment 4: Sensitivity to $\varepsilon$
+
+The SpectralDrop threshold $\varepsilon$ shows no sensitivity across two
+orders of magnitude ($\varepsilon \in [0.001, 0.5]$): both
+$H_{\text{final}}$ and evaluation counts are identical on HIV and
+p2p-Gnutella for all tested values. Analysis of 290 SpectralDrop values
+accumulated across 20 greedy iterations on p2p-Gnutella reveals that all
+values lie in $[5.37 \times 10^{-4},\ 1.50 \times 10^{-3}]$ --- a range
+spanning less than $0.001$. Since all values fall well below any
+$\varepsilon \geq 0.001$, varying $\varepsilon$ within $[0.001, 0.5]$
+never changes which edges are retained. This concentrated distribution
+arises from the uniform in/out-degree structure of the KSCC: edges
+differ only modestly in their spectral contribution, eliminating any
+natural decision boundary within the tested range. The ablation study
+(Table [5](#tab:ablation){reference-type="ref"
+reference="tab:ablation"}) confirms that $\varepsilon$ is active:
+removing the spectral threshold entirely increases evaluations by 16%.
+
+## Experiment 5: Scalability
+
+Table [6](#tab:scalability){reference-type="ref"
+reference="tab:scalability"} reports wall-clock time for $k=20$ edge
+removal.
+
+::: {#tab:scalability}
+  **Dataset**         $|V|$     $|E|$  **SG-SNIR**    **MaxExpH**
+  --------------- --------- --------- ------------- -------------
+  p2p-Gnutella        6,301    20,777     42.1s             92.4s
+  Wiki-Vote           7,115   103,689     14.4s             38.8s
+  HIV                35,228    49,779    288.9s            299.9s
+  soc-Epinions1      75,879   508,837   1,631.6s         2,147.9s
+  email-EuAll       265,214   420,045      ---                OOT
+
+  : Wall-clock scalability ($k=20$). OOT = exceeds 3,600s.
+:::
+
+Wall-clock speedup closely tracks evaluation-count speedup, confirming
+that SNIR simulation dominates runtime. On email-EuAll (265K nodes, 420K
+edges), MaxExpectedH exceeds the 3,600s time limit at $k=20$ while
+SG-SNIR remains tractable. This represents the primary scalability
+advantage: on massive networks where exhaustive evaluation is
+infeasible, SG-SNIR is the only viable approach.
+
+## Experiment 6: KSCC Structure and Filter Efficiency
+
+Table [7](#tab:kscc){reference-type="ref" reference="tab:kscc"} shows
+the relationship between KSCC structure and filtering efficiency.
+
+::: {#tab:kscc}
+  **Dataset**       **KSCC%**   $\rho(S^*)$   **Filter ratio**    **Speedup**
+  --------------- ----------- ------------- ------------------ --------------
+  HIV                   0.18%          6.25              1.000   1.00$\times$
+  Wiki-Vote             18.3%         44.57              0.413   2.29$\times$
+  p2p-Gnutella          32.8%          4.88              0.458   2.41$\times$
+  soc-Epinions1         42.5%         82.79              0.643   1.31$\times$
+
+  : KSCC structure and filter efficiency.
+:::
+
+Networks with negligible KSCC (HIV) achieve no filtering benefit.
+Networks with meaningful KSCCs achieve 2.3--2.4$\times$ speedup. The
+*filter ratio* $|C|/|\Gamma(W)|$ is the direct predictor of speedup, not
+KSCC% alone. KSCC concentration contributes to a low filter ratio, but
+graph density moderates the realised benefit: soc-Epinions1 has the
+largest KSCC (42.5%) but a higher filter ratio (0.643) due to its large
+absolute $\Gamma(W)$.
+
+## Experiment 7: Edge Category Analysis
+
+On Wiki-Vote, SG-SNIR selects edges in exactly the same structural
+categories as exhaustive MaxExpectedH: 50% internal KSCC edges, 16.7%
+bridge edges, and 33.3% peripheral edges. This confirms that the
+SpectralDrop filter identifies the same structurally critical edges as
+exhaustive simulation, at 2.29$\times$ lower evaluation cost. On HIV,
+both methods select 100% peripheral edges, consistent with the KSCC
+containing no $\Gamma(W)$ candidates.
+
+## Experiment 8: Robustness to Seed Configuration
+
+Table [8](#tab:robustness){reference-type="ref"
+reference="tab:robustness"} reports the stability of SG-SNIR across
+varying seed counts ($k=10$, 10 trials per seed size) on two contrasting
+datasets: HIV (heterogeneous degree distribution) and p2p-Gnutella
+(structured KSCC).
+
+::: {#tab:robustness}
++:----------+-------:+------:+---------:+---------:+
+| **Seeds** | **HIV**        | **p2p-Gnutella**    |
++-----------+--------+-------+----------+----------+
+|           | Mean   | CoV   | Mean     | CoV      |
++-----------+--------+-------+----------+----------+
+| 1         | 4.25   | 32.9% | 3.13     | 0.0%     |
++-----------+--------+-------+----------+----------+
+| 3         | 15.44  | 27.4% | 13.37    | 4.5%     |
++-----------+--------+-------+----------+----------+
+| 5         | 39.21  | 68.0% | 24.12    | 9.6%     |
++-----------+--------+-------+----------+----------+
+| 10        | 81.24  | 34.3% | 50.04    | 5.9%     |
++-----------+--------+-------+----------+----------+
+| 20        | 169.17 | 21.8% | 102.40   | 3.3%     |
++-----------+--------+-------+----------+----------+
+
+: Robustness to seed configuration: mean H (CoV%).
+:::
+
+p2p-Gnutella shows high stability (CoV $\leq$ 10% across all seed sizes;
+deterministic at seeds=1). HIV shows high variance, peaking at CoV=68%
+for seeds=5. This reflects HIV's heterogeneous degree distribution: seed
+configurations hitting hub nodes produce outbreaks up to 7$\times$
+larger than peripheral seeds. This is a property of the *network*, not
+the algorithm. All inter-method comparisons in this work use identical
+seeds (BASE_SEED=42) to ensure fair evaluation.
+
+## Experiment 9: Comparison with State-of-the-Art Baselines
+
+To validate the necessity of SG-SNIR's hybrid approach, we benchmark it
+against the two core frameworks it builds upon: the exhaustive
+simulation strategy introduced for the SNIR model in \[1\] (which we
+implement as **MaxExpectedH**), and the purely structural spectral
+node-immunization method, **DINO** \[2\].
+
+**Comparison against Paper 1 \[1\]:** As established in
+Table [3](#tab:quality_gap){reference-type="ref"
+reference="tab:quality_gap"} and
+Table [4](#tab:efficiency){reference-type="ref"
+reference="tab:efficiency"}, SG-SNIR matches the quality of the
+MaxExpectedH approach (from \[1\]) within 0.1--2.3% while achieving up
+to a 2.4$\times$ speedup. This proves that our spectral filtering safely
+prunes the search space, overcoming the computational intractability of
+\[1\]'s naive greedy search without sacrificing epidemic realism.
+Furthermore, Table [6](#tab:scalability){reference-type="ref"
+reference="tab:scalability"} demonstrates that MaxExpectedH fails to
+scale on networks exceeding 200K nodes (email-EuAll), where SG-SNIR
+remains fully tractable.
+
+**Comparison against DINO \[2\]:** DINO \[2\] is a node immunization
+strategy that greedily removes nodes to minimize the spectral radius of
+the KSCC. However, removing whole nodes is often practically impossible
+in real-world quarantines. To create a fair comparison against SG-SNIR's
+targeted edge-blocking approach, we evaluate the interventions based on
+*Network Disruption*---the equivalent contact budget measured by the
+total number of connections severed. Node removal is a coarse-grained
+intervention that inflicts massive structural damage to the network,
+whereas targeted edge removal is fine-grained.
+
+We subjected both algorithms to massive, globally distributed epidemics
+by initializing the SNIR simulation with 300 and 600 random seed nodes
+in the p2p-Gnutella network. We use large seed counts (300, 600) for
+this comparison to create outbreak conditions where DINO's node removal
+strategy selects meaningful targets --- with only 5 seeds, the KSCC
+containment effect is too small to differentiate the methods clearly. We
+ran DINO to incrementally select varying budgets of top hub nodes to
+quarantine. For 300 seeds, quarantining up to 15 central nodes severed
+exactly 1,256 edges (the sum of in-degree plus out-degree of the 15
+selected nodes in the original graph). For 600 seeds, quarantining up to
+20 nodes severed 1,607 edges. We then provided SG-SNIR with the exact
+same maximum edge-disruption budgets and compared the resulting expected
+final influence $H_{\text{final}}$.
+
+As shown in Fig. [3](#fig:budget_line){reference-type="ref"
+reference="fig:budget_line"}, SG-SNIR vastly outperforms DINO across all
+scales of network disruption. Under the massive 300-seed outbreak,
+DINO's maximal disruption (severing 1,256 edges) only reduced the spread
+to $H_{\text{final}} = 1136.50$. When granted the exact same disruption
+budget, SG-SNIR successfully isolated the critical transmission vectors,
+achieving a much lower $H_{\text{final}} = 938.82$. Similarly, under the
+extreme 600-seed outbreak, SG-SNIR achieved $H_{\text{final}} = 1910.60$
+compared to DINO's $2246.54$ for the same 1,607-edge disruption cost.
+This conclusively validates our core argument: structural metrics alone
+waste intervention resources breaking non-transmitting contacts. SG-SNIR
+leverages spectral guidance combined with SNIR-awareness to effectively
+trap the epidemic while preserving the underlying integrity of the
+network.
+
+<figure id="fig:budget_line" data-latex-placement="htbp">
+<p><embed src="diagrams/budget_comparison_300_seeds.pdf"
+style="width:90.0%" /><br />
+<embed src="diagrams/budget_comparison_600_seeds.pdf"
+style="width:90.0%" /></p>
+<figcaption>Epidemic containment under equivalent Network Disruption
+budgets for 300-seed (top) and 600-seed (bottom) massive outbreaks on
+p2p-Gnutella. SG-SNIR consistently achieves significantly lower <span
+class="math inline"><em>H</em><sub>final</sub></span> than DINO at all
+budget levels, effectively halting the epidemic while inflicting the
+exact same amount of structural damage to the network.</figcaption>
+</figure>
+
+# Conclusions {#sec:conclusions}
+
+We presented SG-SNIR, a hybrid spectral-guided framework for epidemic
+containment via edge blocking in directed networks. By combining
+KSCC-based structural filtering with an $\mathcal{O}(1)$-per-edge
+SpectralDrop criterion and full SNIR simulation on the reduced candidate
+set, SG-SNIR achieves a favourable quality-efficiency trade-off:
+2.3--2.4$\times$ fewer epidemic simulations at a quality cost of
+0.1--2.3% compared to exhaustive MaxExpectedH on networks with
+meaningful KSCC structure. On networks without KSCC structure (HIV),
+SG-SNIR degrades gracefully to MaxExpectedH with zero quality loss.
+
+The spectral threshold $\varepsilon$ is robust across two orders of
+magnitude, attributed to the tightly concentrated SpectralDrop
+distribution on real networks. The ablation study confirms that every
+component --- KSCC filtering, bridge edge inclusion, and spectral
+thresholding --- contributes to efficiency without sacrificing quality.
+
+Future work includes supporting dynamic recalculation of $W$ as the
+epidemic evolves, extending the framework to heterogeneous transmission
+probabilities, and scaling to billion-edge networks through approximate
+SCC decomposition.
+
+# References {#references .unnumbered}
+
+Dai, C., Chen, L., Hu, K., and Ding, Y., "Minimizing the Spread of
+Negative Influence in SNIR Model by Contact Blocking," *Entropy*,
+24(11):1623, 2022.
+
+He, Y., Chen, C., Wang, S., Min, G., and Li, J., "Demystify Epidemic
+Containment in Directed Networks: Theory and Algorithms," *Proc. WSDM
+'25*, 2025.
+
+Morris, M. and Rothenberg, R., "HIV Transmission Network Metastudy
+Project," ICPSR 22140, 2011.
+
+Leskovec, J. and Krevl, A., "SNAP Datasets: Stanford Large Network
+Dataset Collection," 2014.

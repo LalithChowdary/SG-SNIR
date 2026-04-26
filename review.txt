@@ -1,0 +1,89 @@
+
+Issue 1 — CRITICAL: References Are Wrong
+The reference section has incorrect citations for both base papers:
+Dai, X. et al., "SNIR: A Probabilistic Model for Epidemic Propagation," 
+IEEE TPDS, 2022.
+
+He, Z. et al., "DINO: Directed Network Immunization," Proc. ACM KDD, 2023.
+The correct citations from the actual papers you read are:
+Paper 1: Dai, C., Chen, L., Hu, K., and Ding, Y. "Minimizing the Spread of Negative Influence in SNIR Model by Contact Blocking." Entropy, 24(11):1623, 2022. https://doi.org/10.3390/e24111623
+Paper 2: He, Y., Chen, C., Wang, S., Min, G., and Li, J. "Demystify Epidemic Containment in Directed Networks: Theory and Algorithms." In Proceedings of WSDM '25, March 2025, Hannover, Germany. https://doi.org/10.1145/3701551.3703575
+The author names, journal names, conference names, and years are all wrong in the current draft. A reviewer from either base paper would immediately notice this. Fix before submission.
+
+Issue 2 — CRITICAL: Equation 17 Reference Is Wrong
+In Step 4 the paper says:
+
+"Note that Equation 17 is defined only for edges (u→v) where both u and v lie within S*."
+
+But this is a Markdown document and the equations do not have numbers 17 and 18 — they are rendered sequentially but the specific numbers depend on the LaTeX rendering. This internal reference will break in the IEEE format. Either remove the equation number references and say "the above equation" or ensure your LaTeX numbering actually produces equation 17 and 18 at those positions.
+
+Issue 3 — HIGH: Experiment 4 ε Description Is Internally Inconsistent
+The paper now says in Experiment 4:
+
+"Analysis of 290 SpectralDrop values accumulated across 20 greedy iterations on p2p-Gnutella reveals that all values lie in [5.37×10⁻⁴, 1.50×10⁻³]"
+
+But the earlier walkthrough showed the SpectralDrop distribution table with values up to 0.060 and 33.3% of values in the range [0.05, 0.1]. These two descriptions are contradictory. The walkthrough showed max value 0.060. The paper now claims max value 1.50×10⁻³ which is 40 times smaller.
+One of these is wrong. You need to verify which SpectralDrop values your code actually computed. The audit document from the final walkthrough said all values are below 0.06, and the distribution table showed values in the range 0.001–0.1. The paper's claim of [5.37×10⁻⁴, 1.50×10⁻³] does not match either document.
+This needs to be verified by checking your actual results/experiment4/ JSON files and correcting whichever description is wrong.
+
+Issue 4 — HIGH: Experiment 3 Soc-Epinions1 Result Is Presented Incorrectly
+The paper says:
+
+"On soc-Epinions1 (k=10, 1 trial), SG-SNIR uses 286 evaluations vs. 445 for exhaustive search, a 1.56× speedup. The quality gap is +14.1%"
+
+Several problems here. First, 1 trial is explicitly flagged as "indicative rather than definitive" which is acceptable but the +14.1% quality gap is alarming and needs context. A 14.1% quality gap is much larger than the 0.065–2.256% gaps seen elsewhere. This will concern a reviewer without explanation. Second, this contradicts Experiment 2 which shows soc-Epinions1 having 601 SG evals and 790 MEH evals — different from the 286 and 445 cited here. The numbers are inconsistent between experiments and need to be reconciled.
+
+Issue 5 — HIGH: DINO Comparison Methodology Needs Clearer Framing
+The Experiment 9 description says:
+
+"We subjected both algorithms to massive, globally distributed epidemics by initializing the SNIR simulation with 300 and 600 random seed nodes"
+
+But elsewhere the paper uses 5 seed nodes as the standard configuration. Jumping to 300 and 600 seeds specifically for the DINO comparison without explaining why will confuse a reviewer. Add one sentence explaining:
+
+"We use large seed counts (300, 600) for this comparison to create outbreak conditions where DINO's node removal strategy selects meaningful targets — with only 5 seeds the KSCC containment effect is too small to differentiate the methods clearly."
+
+Also the paper says "quarantining up to 15 central nodes severed exactly 1,256 edges" — this is a very specific number and a reviewer will ask how it was computed. Add one sentence clarifying that this is the sum of in-degree plus out-degree of the 15 selected nodes in the original graph.
+
+Issue 6 — HIGH: Related Work Section Is Missing
+The introduction references "Section ??" for related work:
+
+"These limitations are discussed in detail in Section ??"
+
+This is a broken reference. The paper has no related work section. For an IEEE conference paper this is acceptable if you integrate related work into the introduction or background, but the broken reference marker must be fixed. Either remove the reference entirely and say "as discussed in prior literature" or add a brief related work subsection at the end of Section II.
+
+Issue 7 — MEDIUM: Table 2 Only Shows η_lo Configurations
+Table 2 effectiveness results only shows η_low configurations. The paper ran four configurations per dataset — two η settings times two weight modes. The caption says "four experimental configurations" but the table only has two rows per dataset. Either add the η_high rows or change the caption to say "representative configurations" and note full results are in supplementary material.
+
+Issue 8 — MEDIUM: email-EuAll Is in Dataset Table But Never Gets Results
+Table 1 includes email-EuAll as a dataset but Tables 2, 3, 4, and 7 never show results for it. Only Table 6 mentions it with OOT. This creates the impression that email-EuAll was included in quality evaluation when it was not. Add a note to Table 1 or to the dataset section:
+
+"email-EuAll is included for scalability evaluation only (Experiment 5). Its size makes SNIR simulation per candidate edge computationally infeasible for quality evaluation."
+
+
+Issue 9 — MEDIUM: Tradeoff Scatter Plot Reference May Not Exist
+The paper references:
+
+"Fig. 2: Efficiency vs. Quality trade-off on p2p-Gnutella"
+
+with path ../plots/diagrams/tradeoff_scatter.pdf. This figure is not described anywhere in the experiment walkthroughs. If this plot was not generated by your experiments, the reference will produce a missing figure in the compiled PDF. Verify this file exists before submission.
+
+Issue 10 — MINOR: Conclusion Speedup Numbers Don't Match Results
+The conclusion says:
+
+"2.3–2.4× fewer epidemic simulations at a quality cost of 0.1–2.3%"
+
+This is correct for the main datasets. But it should also mention the degradation case for completeness since the abstract mentions it. Add:
+
+"On networks without meaningful KSCC structure, the filter is inactive and SG-SNIR matches MaxExpectedH exactly."
+
+This sentence already appears in the conclusions but the speedup range should be qualified as "on networks with KSCC concentration ≥ 18%" to match the abstract's precise framing.
+
+Issue 11 — MINOR: Author Fields Are Empty
+yamlauthor:
+- 
+- 
+-
+The author names, affiliations, and emails are blank. This is presumably intentional for the version you shared but must be filled before submission.
+
+
+these are the issue one of the peers identified but i am not sure if thse are accurate so please check if these are accurate and them fix theseissuees 
