@@ -1,0 +1,31 @@
+2026-04-26 00:39:22 - Loading p2p-Gnutella...
+2026-04-26 00:39:22 - Preparing adjacency matrix for DINO...
+2026-04-26 00:39:22 - 
+==================================================
+Starting Configuration: 300 Seeds
+==================================================
+2026-04-26 00:39:22 - Running DINO to select 15 nodes...
+2026-04-26 00:39:23 - DINO finished in 1.2s
+2026-04-26 00:39:23 - Running SG-SNIR for up to 1256 edges...
+2026-04-26 03:32:53 - SG-SNIR finished in 10410.3s. History length: 904
+2026-04-26 03:32:53 -   --> k=5 nodes | Budget=459 edges | DINO H=1146.6219 | SG-SNIR H=1027.6502
+2026-04-26 03:32:53 -   --> k=10 nodes | Budget=868 edges | DINO H=1140.9322 | SG-SNIR H=944.6880
+2026-04-26 03:32:53 -   --> k=15 nodes | Budget=1256 edges | DINO H=1136.5072 | SG-SNIR H=938.8245
+2026-04-26 03:32:53 - 
+==================================================
+Starting Configuration: 600 Seeds
+==================================================
+2026-04-26 03:32:53 - Running DINO to select 20 nodes...
+2026-04-26 03:32:55 - DINO finished in 1.4s
+2026-04-26 03:32:55 - Running SG-SNIR for up to 1607 edges...
+2026-04-26 15:29:07 - SG-SNIR finished in 42971.9s. History length: 1607
+2026-04-26 15:29:07 -   --> k=10 nodes | Budget=868 edges | DINO H=2258.1127 | SG-SNIR H=2061.2251
+2026-04-26 15:29:07 -   --> k=15 nodes | Budget=1256 edges | DINO H=2252.6050 | SG-SNIR H=1981.0512
+2026-04-26 15:29:07 -   --> k=20 nodes | Budget=1607 edges | DINO H=2246.5369 | SG-SNIR H=1910.5983
+2026-04-26 15:29:07 - 
+==================================================
+Starting Configuration: 900 Seeds
+==================================================
+2026-04-26 15:29:07 - Running DINO to select 25 nodes...
+2026-04-26 15:29:09 - DINO finished in 1.9s
+2026-04-26 15:29:09 - Running SG-SNIR for up to 1965 edges...

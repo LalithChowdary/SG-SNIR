@@ -50,40 +50,82 @@ plt.savefig(os.path.join(out_dir, 'tradeoff_scatter.pdf'), format='pdf', dpi=300
 plt.close()
 
 # ---------------------------------------------------------
-# Plot 2: Equivalent Contact Budget Line Chart
+# Plot 2: Equivalent Contact Budget Line Charts (300 & 600 seeds)
 # ---------------------------------------------------------
 import json
 
-with open('../results/experiment9/p2p-Gnutella_baseline_comparison.json', 'r') as f:
-    exp9_data = json.load(f)['data']
+# Plot 300 Seeds (Grouped Bar Chart)
+try:
+    with open('../results/experiment9/logs/results_300_seeds.json', 'r') as f:
+        exp9_300_data = json.load(f)['data']
 
-budgets = [d['budget_edges'] for d in exp9_data]
-dino_H = [d['dino_H'] for d in exp9_data]
-sg_H = [d['sg_H'] for d in exp9_data]
+    budgets_300 = [str(d['budget_edges']) + ' Edges\n(' + str(d['k_nodes']) + ' Nodes)' for d in exp9_300_data]
+    dino_H_300 = [d['dino_H'] for d in exp9_300_data]
+    sg_H_300 = [d['sg_H'] for d in exp9_300_data]
 
-plt.figure(figsize=(7, 5))
+    x = np.arange(len(budgets_300))
+    width = 0.35
 
-# Plot lines
-plt.plot(budgets, dino_H, marker='s', markersize=8, linewidth=2, color='#e74c3c', label='DINO (Paper 2) [Node Removal]')
-plt.plot(budgets, sg_H, marker='o', markersize=8, linewidth=2, color='#3498db', label='SG-SNIR (Ours) [Edge Removal]')
+    plt.figure(figsize=(8, 5))
+    bars1 = plt.bar(x - width/2, dino_H_300, width, label='DINO (Node Removal)', color='#e74c3c', edgecolor='black', zorder=3)
+    bars2 = plt.bar(x + width/2, sg_H_300, width, label='SG-SNIR (Edge Removal)', color='#3498db', edgecolor='black', zorder=3)
 
-# Formatting
-plt.grid(True, linestyle='--', alpha=0.6)
-plt.title('Equivalent Contact Budget (p2p-Gnutella)', fontsize=12, pad=15)
-plt.xlabel('Equivalent Contact Budget (Edges Removed)', fontsize=11)
-plt.ylabel('Final Epidemic Influence ($H_{final}$) $\\leftarrow$ Better', fontsize=11)
+    plt.ylabel('Final Epidemic Influence ($H_{final}$) $\\leftarrow$ Better', fontsize=11)
+    plt.title('Equivalent Contact Budget (300 Seeds - Massive Outbreak)', fontsize=12, pad=15)
+    plt.xticks(x, budgets_300)
+    plt.legend()
+    plt.grid(axis='y', linestyle='--', alpha=0.6, zorder=0)
 
-# Annotate the gap
-plt.annotate('21.1% Reduction\nin Epidemic Spread!', 
-             xy=(budgets[-1], sg_H[-1]), xytext=(budgets[-1]-100, 17.5),
-             arrowprops=dict(facecolor='#2c3e50', shrink=0.05, width=2, headwidth=8),
-             fontsize=11, ha='center', fontweight='bold', color='#2c3e50',
-             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=1))
+    # Add text labels
+    for bar in bars1:
+        plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 5, f'{bar.get_height():.1f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    for bar in bars2:
+        plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 5, f'{bar.get_height():.1f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
 
-plt.ylim(15, 20.5)
-plt.legend(loc='upper right')
-plt.tight_layout()
-plt.savefig(os.path.join(out_dir, 'budget_comparison_line.pdf'), format='pdf', dpi=300)
-plt.close()
+    # Keep y-axis scalable to show gap clearly, but ensure 0 isn't required if differences are small.
+    # We will let matplotlib auto-scale the y-axis, but add some padding at top
+    plt.ylim(min(sg_H_300)*0.9, max(dino_H_300)*1.05)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, 'budget_comparison_300_seeds.pdf'), format='pdf', dpi=300)
+    plt.close()
+except FileNotFoundError:
+    print("300 seeds data not found.")
+
+# Plot 600 Seeds (Grouped Bar Chart)
+try:
+    with open('../results/experiment9/logs/results_600_seeds.json', 'r') as f:
+        exp9_600_data = json.load(f)['data']
+
+    budgets_600 = [str(d['budget_edges']) + ' Edges\n(' + str(d['k_nodes']) + ' Nodes)' for d in exp9_600_data]
+    dino_H_600 = [d['dino_H'] for d in exp9_600_data]
+    sg_H_600 = [d['sg_H'] for d in exp9_600_data]
+
+    x = np.arange(len(budgets_600))
+    width = 0.35
+
+    plt.figure(figsize=(8, 5))
+    bars1 = plt.bar(x - width/2, dino_H_600, width, label='DINO (Node Removal)', color='#e74c3c', edgecolor='black', zorder=3)
+    bars2 = plt.bar(x + width/2, sg_H_600, width, label='SG-SNIR (Edge Removal)', color='#3498db', edgecolor='black', zorder=3)
+
+    plt.ylabel('Final Epidemic Influence ($H_{final}$) $\\leftarrow$ Better', fontsize=11)
+    plt.title('Equivalent Contact Budget (600 Seeds - Extreme Outbreak)', fontsize=12, pad=15)
+    plt.xticks(x, budgets_600)
+    plt.legend()
+    plt.grid(axis='y', linestyle='--', alpha=0.6, zorder=0)
+
+    # Add text labels
+    for bar in bars1:
+        plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 5, f'{bar.get_height():.1f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    for bar in bars2:
+        plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 5, f'{bar.get_height():.1f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+
+    plt.ylim(min(sg_H_600)*0.9, max(dino_H_600)*1.05)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_dir, 'budget_comparison_600_seeds.pdf'), format='pdf', dpi=300)
+    plt.close()
+except FileNotFoundError:
+    print("600 seeds data not found.")
 
 print("Successfully generated plots in plots/diagrams/")
