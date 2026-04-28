@@ -2,10 +2,9 @@
 
 **Spectral-Guided Edge Blocking for Epidemic Containment in Directed Networks Using the SNIR Model**
 
-> Lalith Chowdary · Srinivas Tirumalaraju · Tanuj Kinjarapu  
-> Shiv Nadar University, 2026
 
 ---
+
 
 ## What is SG-SNIR?
 
@@ -55,8 +54,7 @@ combo/
 │
 ├── docs/                       # Documentation
 │   ├── EXPERIMENTS.md          # ← Detailed experiment guide (how to run, results, logs)
-│   ├── SG-SNIR_Paper.md        # Full paper in Markdown
-│   └── experiments_detailed.md # Deep-dive result analysis with tables
+│   └── Spectral-Guided Edge Blocking for Epidemic Containment in Directed Networks Using the SNIR Model.pdf  # Paper PDF
 │
 ├── latex/                      # LaTeX source for the paper
 │   ├── conference_101719.tex   # Main paper source
@@ -129,17 +127,16 @@ Each of the 9 experiments has a dedicated script in the `experiments/` folder.
 
 ## Key Results Summary
 
-| Dataset | KSCC% | SG-SNIR vs DegProd | SG-SNIR vs MaxExpH | Speedup |
-|---------|:-----:|:------------------:|:------------------:|:-------:|
-| HIV | 0.18% | +4–8% better | 0.000% gap | 1.00× (graceful) |
-| p2p-Gnutella | 32.8% | +0.6% better | +0.106% gap | **2.41×** |
-| Wiki-Vote | 18.3% | +2–5% better | +2.256% gap | **2.29×** |
-| soc-Epinions1 | 42.5% | — | — | 1.31× |
+| Dataset | KSCC% | SG-SNIR vs MaxExpH (quality gap) | Speedup vs MaxExpH | SG-SNIR vs DINO (same disruption budget) |
+|---------|:-----:|:---------------------------------:|:------------------:|:-----------------------------------------:|
+| HIV | 0.18% | 0.000% (exact match) | 1.00× (graceful) | — |
+| p2p-Gnutella | 32.8% | +0.106% | **2.41×** | **17% fewer infections** (300-seed outbreak) |
+| Wiki-Vote | 18.3% | +2.256% (3-trial upper bound) | **2.29×** | — |
+| soc-Epinions1 | 42.5% | — | 1.31× | — |
 
 ---
 
 ## Paper
 
-The full research paper is available in two formats:
-- **PDF:** `latex/conference_101719.pdf`  
-- **Markdown:** `docs/SG-SNIR_Paper.md`
+The full paper PDF is available at:
+- `docs/Spectral-Guided Edge Blocking for Epidemic Containment in Directed Networks Using the SNIR Model.pdf`
