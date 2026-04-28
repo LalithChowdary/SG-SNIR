@@ -174,8 +174,6 @@ def spectral_filter(
     threshold = eps * rho_S_star
 
     for (u, v) in gamma_prime:
-        # All edges in gamma_prime are guaranteed to have v ∈ S* by construction.
-        # Only u_internal varies — True for internal edges, False for bridge edges.
         u_internal = u in S_star
 
         if u_internal:
@@ -297,8 +295,7 @@ def sg_snir_blocking(
     eval_counts:   List[int]   = []
 
     for iteration in range(k):
-        # Step 2 — Compute Γ(W) restricted to Susceptible targets.
-        # initial_S is static (same as W), consistent with static budget model.
+        # Step 2 — Compute Γ(W)
         gamma_W = get_candidates(G, W, initial_S)
 
         if not gamma_W:
@@ -306,25 +303,12 @@ def sg_snir_blocking(
                 print(f"[iter {iteration}] Γ(W) is empty — budget exhausted early.")
             break
 
-        # Step 3 — KSCC identification using intra-SCC degrees.
-        # get_kscc returns deg_product_sum directly to avoid redundant recomputation.
+        # Step 3 — KSCC identification
         S_star, rho_S_star, intra_degrees, vol_S_star, deg_product_sum = get_kscc(G)
 
-        # Build Γ'(W) = Γ(W) ∩ (E_{S*} ∪ B_{S*})
-        # Both internal edges (u∈S*, v∈S*) and bridge edges (u∉S*, v∈S*)
-        # share the same predicate: v ∈ S*. Outgoing KSCC edges (u∈S*, v∉S*)
-        # are correctly excluded. The two-category split (internal vs bridge)
-        # is handled inside spectral_filter where it matters for SpectralDrop.
-        # Degradation: if S_star is None (no non-trivial SCC), gamma_prime is
-        # left empty and the fallback below degrades to MaxExpectedH over Γ(W).
+        # Build Γ'(W) = Γ(W) ∩ (E_{S*} ∪ B_{S*}): keep edges whose target v ∈ S*
         if S_star is not None:
-            gamma_prime = [
-                (u, v) for (u, v) in gamma_W
-                if v in S_star
-                # Covers both: internal edges (u ∈ S*, v ∈ S*)
-                # and bridge edges (u ∉ S*, v ∈ S*)
-                # Edges where v ∉ S* are excluded — they have no spectral impact on S*
-            ]
+            gamma_prime = [(u, v) for (u, v) in gamma_W if v in S_star]
         else:
             gamma_prime = []
 

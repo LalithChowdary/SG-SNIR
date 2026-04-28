@@ -144,10 +144,6 @@ def run_trial(
     }
 
     # --- DegreeProduct ---
-    # degree_product_blocking selects edges greedily by d_out(u)*d_in(v) with
-    # no SNIR simulation.  We must run compute_influence_range after EVERY
-    # removal so H_history has the same length as SG-SNIR and MaxExpectedH,
-    # making all curves directly comparable on the same x-axis.
     t0 = time.time()
     deg_edges, _, _ = degree_product_blocking(
         G, initial_S, initial_N, initial_I, initial_R, k_max,
@@ -189,8 +185,6 @@ def run_experiment1(
         G_orig = load_dataset(dataset)
 
         for eta_label, eta_val in ETA_CONFIGS.items():
-            # Construct SNIRParams directly — consistent with all other experiment files.
-            # kappa=1.0 default: N-state nodes transmit equally to I-state nodes.
             params = SNIRParams(
                 alpha=0.033, beta=0.022, delta=0.020,
                 eta=eta_val,  gamma=0.315, xi=0.300,

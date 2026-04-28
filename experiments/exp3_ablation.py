@@ -95,13 +95,6 @@ def _run_variant(
                     gamma_prime = []
 
             if len(gamma_prime) == 0:
-                # No KSCC candidates available for this iteration.
-                #
-                # For no_bridge: ideally we would skip non-internal edges,
-                # but we cannot break early because that shortens H_history
-                # below k entries, making all variant curves incomparable.
-                # Resolution: fall back to gamma_W and mark this iteration
-                # as a forced fallback so the paper can note it.
                 C = gamma_W
             elif variant == "no_spectral":
                 # Variant D: skip SpectralDrop filter → C = Γ'(W)
