@@ -1,0 +1,7 @@
+# SG-SNIR — Python Dependencies
+# Install with: pip install -r requirements.txt
+
+networkx>=3.0
+numpy>=1.24
+matplotlib>=3.6
+scipy>=1.10
